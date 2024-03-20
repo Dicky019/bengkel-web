@@ -9,7 +9,7 @@
 		<div class="flex flex-col gap-4">
 			<p>Please login to use this new an exciting feature</p>
 			<a
-				href="/auth/login/github"
+				href="/auth/login/google"
 				class="rounded-lg bg-white p-4 font-mono font-bold text-black shadow-md"
 				>Sign in with Github</a
 			>

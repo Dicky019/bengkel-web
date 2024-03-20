@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import type { MiddlewareVariables } from '..';
 import { generateId } from 'lucia';
 import { db } from '$lib/db';
-import { todoTable } from '$lib/db/schema';
+import { todoTable } from '$lib/db/schemas/todo';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';

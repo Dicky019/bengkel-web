@@ -1,20 +1,23 @@
-import { relations } from 'drizzle-orm';
+import { relations } from 'drizzle-orm/relations';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { todoTable } from './todo';
+import { sql } from 'drizzle-orm';
+import { generateId } from 'lucia';
 
 export const userTable = sqliteTable('user', {
-	id: text('id').primaryKey(),
+	id: text('id')
+		.primaryKey()
+		.$defaultFn(() => generateId(40)),
 	provider: text('provider', { enum: ['google', 'github'] }).notNull(),
 	providerId: text('provider_id', { length: 255 }).notNull(),
 	firstName: text('first_name', { length: 100 }).notNull(),
 	lastName: text('last_name', { length: 100 }).notNull(),
+	imageUrl: text('image_url', { length: 255 }).notNull().unique(),
 	email: text('email', { length: 100 }).notNull().unique(),
-	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
+	createdAt: integer('created_at', { mode: 'timestamp' })
+		.default(sql`(CURRENT_TIMESTAMP)`)
+		.notNull()
 });
-
-export const userRelations = relations(userTable, ({ many }) => ({
-	sessions: many(sessionTable),
-	todos: many(todoTable)
-}));
 
 export const sessionTable = sqliteTable('session', {
 	id: text('id').notNull().primaryKey(),
@@ -31,19 +34,7 @@ export const sessionRelations = relations(sessionTable, ({ one }) => ({
 	})
 }));
 
-export const todoTable = sqliteTable('todo', {
-	id: text('id', { length: 100 }).primaryKey(),
-	name: text('name').notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-	completed: integer('completed', { mode: 'boolean' }).notNull(),
-	userId: text('user_id', { length: 100 })
-		.references(() => userTable.id)
-		.notNull()
-});
-
-export const todoRelations = relations(todoTable, ({ one }) => ({
-	user: one(userTable, {
-		fields: [todoTable.userId],
-		references: [userTable.id]
-	})
+export const userRelations = relations(userTable, ({ many }) => ({
+	sessions: many(sessionTable),
+	todos: many(todoTable)
 }));
