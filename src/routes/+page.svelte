@@ -1,7 +1,13 @@
 <script lang="ts">
+	const { data } = $props();
+
+	$effect(() => {
+		console.log({ data });
+	});
 </script>
 
 <div class="container flex items-center justify-center">
+	{data.accessToken}
 	<div class="w-full md:w-[600px]">
 		<header>
 			<h2 class="text-xl font-bold">Basic Todo App</h2>

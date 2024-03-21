@@ -1,14 +1,13 @@
 // routes/users.ts
 import { Hono } from 'hono';
-import type { MiddlewareVariables } from '..';
+import { ensureLoggedIn } from '../middlewares/auth';
+import { successResponse } from '../helpers/response';
+import type { MiddlewareVariables } from '$lib/utils/types';
 
 const users = new Hono<{
 	Variables: MiddlewareVariables;
 }>().get('/me', (c) => {
-	const session = c.get('session');
-	const user = c.get('user');
-
-	return c.json({ session, user });
+	return successResponse(c, c.var);
 });
 
 export default users;
