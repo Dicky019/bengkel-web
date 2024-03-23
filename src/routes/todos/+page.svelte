@@ -2,7 +2,7 @@
 	const { data } = $props();
 </script>
 
-<div class="container flex flex-col items-center justify-center text-white shadow-md">
+<div class="container flex flex-col items-center justify-center shadow-md">
 	<h1 class="mb-6 text-3xl font-bold">Todo List</h1>
 	<ul class="space-y-4 pb-8">
 		{#each data.todos as todo}

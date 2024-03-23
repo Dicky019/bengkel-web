@@ -2,14 +2,11 @@ import type { Context } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { getStatusName, type THttpStatusErrorValue, type THttpStatusSuccessValue } from '.';
 
-export const throwErrorResponse = <T extends object>(
-	statusCode: THttpStatusErrorValue,
-	errors: T
-) => {
+export const throwErrorResponse = (statusCode: THttpStatusErrorValue, message: string) => {
 	const errorRes = {
 		code: statusCode,
 		status: getStatusName(statusCode),
-		errors
+		message: message.toLocaleUpperCase()
 	};
 
 	return new HTTPException(statusCode, {
@@ -27,7 +24,7 @@ export const successResponse = <T extends object>(
 	const successRes = {
 		code: statusCode,
 		status: getStatusName(statusCode),
-		data
+		...data
 	};
 	return c.json(successRes, statusCode);
 };

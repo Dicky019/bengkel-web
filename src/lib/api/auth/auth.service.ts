@@ -1,7 +1,7 @@
 import { HttpStatus } from '../helpers/enum';
 import { throwErrorResponse } from '../helpers/response';
 import * as authRepo from './auth.repository';
-import type { GetGoogleUser, TAuthError } from './auth.type';
+import type { GetGoogleUser } from './auth.type';
 
 export async function googleAdmin({ accessToken }: GetGoogleUser) {
 	const googleData = await authRepo.googleUserInfo({ accessToken });
@@ -11,16 +11,20 @@ export async function googleAdmin({ accessToken }: GetGoogleUser) {
 		providerId: googleData.id
 	});
 
+	console.log({ user });
+
 	if (!user) {
-		throw throwErrorResponse<TAuthError>(HttpStatus.NOT_FOUND, {
-			massage: [`Akun dengan email ${googleData.email} tidak terdaftar`]
-		});
+		throw throwErrorResponse(
+			HttpStatus.NOT_FOUND,
+			`Akun dengan email ${googleData.email} tidak terdaftar`
+		);
 	}
 
-	if (user.role === 'admin') {
-		throw throwErrorResponse<TAuthError>(HttpStatus.UNAUTHORIZED, {
-			massage: [`Akun dengan role ${user.role} anda tidak di ijinkan`]
-		});
+	if (user.role !== 'admin') {
+		throw throwErrorResponse(
+			HttpStatus.UNAUTHORIZED,
+			`Akun dengan role ${user.role} tidak di ijinkan`
+		);
 	}
 	return user;
 }

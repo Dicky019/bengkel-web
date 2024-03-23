@@ -1,11 +1,12 @@
 import { Hono } from 'hono';
 import { hc } from 'hono/client';
 
-import { authMiddlewareLucia, type MiddlewareVariables } from './middlewares/auth';
+import { authMiddlewareLucia } from './middlewares/auth';
 
-import users from './users';
+import users from './users/users.controller';
 import todos from './todos';
 import authRouter from './auth/auth.controller';
+import type { MiddlewareVariables } from './helpers/types';
 
 /* -------------------------------------------------------------------------- */
 /*                                     App                                    */

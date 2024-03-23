@@ -1,6 +1,7 @@
-import { redirect, type RequestEvent } from '@sveltejs/kit';
+import { type RequestEvent } from '@sveltejs/kit';
 import { google } from '$lib/auth/oauth';
 import { VITE_VERCEL_URL } from '$env/static/private';
+import { redirect } from 'sveltekit-flash-message/server';
 
 // NOTE: this could/probably should be moved over to the API
 
@@ -20,7 +21,6 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	}
 
 	const codeVerifier = event.cookies.get('google_oauth_code_verifier');
-	console.log({ codeVerifier });
 
 	if (!codeVerifier) {
 		return Response.json(
@@ -41,5 +41,5 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		sameSite: 'lax'
 	});
 
-	return redirect(302, VITE_VERCEL_URL);
+	return redirect(VITE_VERCEL_URL, { type: 'loading', message: 'Waiting...' }, event.cookies);
 }

@@ -1,13 +1,15 @@
 import { Hono } from 'hono';
-import type { MiddlewareVariables } from '..';
 import { generateId } from 'lucia';
 import { db } from '$lib/db';
 import { todoTable } from '$lib/db/schemas/todo';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
-import { ensureLoggedIn } from '../helpers';
 import { HTTPException } from 'hono/http-exception';
+import { ensureLoggedIn } from '../middlewares/auth';
+import type { MiddlewareVariables } from '../helpers/types';
+import { successResponse } from '../helpers/response';
+import validatorSchemaMiddleware from '../middlewares/validator';
 
 const users = new Hono<{
 	Variables: MiddlewareVariables;
@@ -18,7 +20,7 @@ const users = new Hono<{
 
 		const todos = await db.select().from(todoTable).where(eq(todoTable.userId, user.id));
 
-		return c.json({ todos });
+		return successResponse(c, { todos });
 	})
 	.post(
 		'/complete',
@@ -57,10 +59,10 @@ const users = new Hono<{
 	)
 	.post(
 		'/',
-		zValidator(
+		validatorSchemaMiddleware(
 			'form',
 			z.object({
-				name: z.string()
+				name: z.string().min(4)
 			})
 		),
 		async (c) => {

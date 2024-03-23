@@ -22,18 +22,18 @@ const authRouter = new Hono()
 			...cookie.attributes
 		});
 
-		return successResponse(c, { user });
+		return successResponse(c, { data: user });
 	})
 	.post('/google-user', validatorSchemaMiddleware('json', authGoogleUserSchema), async (c) => {
-		const login = c.req.valid('json');
-		const user = await authService.googleUser(login);
+		const { accessToken, role } = c.req.valid('json');
+		const user = await authService.googleUser({ accessToken, role });
 		const cookie = await createSessionCookieLucia(user.id);
 
 		setCookie(c, cookie.name, cookie.value, {
 			path: '.',
 			...cookie.attributes
 		});
-		return successResponse(c, { user });
+		return successResponse(c, { data: user });
 	});
 
 export default authRouter;

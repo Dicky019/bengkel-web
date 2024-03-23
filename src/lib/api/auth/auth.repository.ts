@@ -1,14 +1,10 @@
 import { db } from '$lib/db';
-import {
-	userTable,
-	type NewUserSchema,
-	type NewUserSchemaAdmin,
-	type User
-} from '$lib/db/schemas/auth';
-import { eq, or } from 'drizzle-orm';
-import type { GetGoogleUser, GoogleUser } from './auth.type';
+import { userTable } from '$lib/db/schemas/auth';
+import { eq } from 'drizzle-orm';
+import type { GetGoogleUser, GoogleUser, LoginSchema } from './auth.type';
+import type { NewUserSchema, User } from '../users/users.type';
 
-export async function googleAdmin(props: NewUserSchemaAdmin) {
+export async function googleAdmin(props: LoginSchema) {
 	const user = await getUser(props);
 	return user;
 }
@@ -24,10 +20,17 @@ export async function googleUser(props: NewUserSchema): Promise<User> {
 	return user;
 }
 
-const getUser = async (props: NewUserSchemaAdmin) => {
-	return await db.query.userTable.findFirst({
-		where: or(eq(userTable.providerId, props.providerId), eq(userTable.email, props.email))
+const getUser = async (props: LoginSchema) => {
+	const user = await db.query.userTable.findFirst({
+		where: eq(userTable.email, props.email)
 	});
+	if (user) {
+		await db.update(userTable).set({
+			providerId: props.providerId
+		});
+	}
+
+	return user;
 };
 
 export async function googleUserInfo({ accessToken }: GetGoogleUser) {

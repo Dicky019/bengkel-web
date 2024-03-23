@@ -1,14 +1,13 @@
 import { HttpStatus, HttpStatusError } from '../helpers/enum';
 import { throwErrorResponse } from '../helpers/response';
 import type { Session, User } from 'lucia';
-import type { UserRole } from '$lib/db/schemas/auth';
 import { createMiddleware } from 'hono/factory';
 import lucia from '$lib/auth';
 import { getCookie, setCookie } from 'hono/cookie';
 import type { Context } from 'hono';
-import { convertCookie, convertSameSite } from '../helpers';
-import type { TAuthError } from '../auth/auth.type';
-import type { MiddlewareVariables } from '$lib/utils/types';
+import { convertCookie } from '../helpers';
+import type { MiddlewareVariables } from '../helpers/types';
+import type { UserRole } from '../users/users.type';
 
 export const authMiddlewareLucia = createMiddleware(async (c, next) => {
 	const sessionId = getCookie(c, lucia.sessionCookieName);
@@ -48,9 +47,7 @@ export const ensureLoggedIn = (
 	const user = c.get('user');
 
 	if (!session && !user) {
-		throw throwErrorResponse<TAuthError>(HttpStatusError.UNAUTHORIZED, {
-			massage: ['Anda Tidak Di Login']
-		});
+		throw throwErrorResponse(HttpStatusError.UNAUTHORIZED, 'Anda Tidak Di Login');
 	}
 
 	return { session, user } as { session: Session; user: User };
@@ -64,9 +61,7 @@ export const authMiddleware = async (
 
 		const isIncluded: boolean = allowedRoles.includes(user.role);
 		if (!isIncluded) {
-			throw throwErrorResponse<TAuthError>(HttpStatus.FORBIDDEN, {
-				massage: ['Anda Tidak Di Ijinkan']
-			});
+			throw throwErrorResponse(HttpStatus.FORBIDDEN, 'Anda Tidak Di Ijinkan');
 		}
 
 		return next();

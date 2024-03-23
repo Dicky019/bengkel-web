@@ -1,5 +1,6 @@
-import { getUserInfo, parseApiResponse } from '$lib/utils/index.js';
+import { getUserInfo, parseApiError } from '$lib/utils/index.js';
 import { error, redirect } from '@sveltejs/kit';
+import { setFlash } from 'sveltekit-flash-message/server';
 
 export const load = async ({ locals }) => {
 	const { session, user } = await getUserInfo(locals);
@@ -7,13 +8,16 @@ export const load = async ({ locals }) => {
 		redirect(307, '/');
 	}
 
-	const res = await parseApiResponse(locals.api.todos.$get());
+	const res = await locals.api.todos.$get();
 
-	if (res.error !== null) {
-		error(res.status, res.error);
+	const data = await res.json();
+
+	if (!res.ok) {
+		const { code, message } = parseApiError(data);
+		error(code, message);
 	}
 
-	return res.data;
+	return data;
 };
 
 export const actions = {
@@ -35,14 +39,19 @@ export const actions = {
 
 		return { success: true };
 	},
-	create: async ({ request, locals }) => {
+	create: async ({ request, locals, cookies }) => {
 		const formData = await request.formData();
 
-		await locals.api.todos.$post({
+		const res = await locals.api.todos.$post({
 			form: {
 				name: formData.get('name') ?? ''
 			}
 		});
+
+		if (!res.ok) {
+			const error = parseApiError(await res.json());
+			setFlash({ type: 'error', message: error.message }, cookies);
+		}
 
 		// todo better error handling
 

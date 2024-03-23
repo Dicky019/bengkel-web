@@ -10,7 +10,10 @@ const validatorSchemaMiddleware = <T extends ZodRawShape, Target extends keyof V
 ) =>
 	zValidator(target, schema, (result) => {
 		if (!result.success) {
-			throw throwErrorResponse(HttpStatus.BAD_REQUEST, result.error.formErrors.fieldErrors);
+			throw throwErrorResponse(
+				HttpStatus.BAD_REQUEST,
+				result.error.issues.map((v) => v.path + ' ' + v.message).join(', ')
+			);
 		}
 	});
 
