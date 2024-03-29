@@ -10,7 +10,8 @@ const users = new Hono<{
 	Variables: MiddlewareVariables;
 }>()
 	.get('/me', (c) => {
-		return successResponse(c, { data: c.var });
+		const { session, user } = c.var;
+		return successResponse(c, { data: { session, user } });
 	})
 	.get('/', validatorSchemaMiddleware('query', usersQuerySchema), async (c) => {
 		const usersQuery = c.req.valid('query');

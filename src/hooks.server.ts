@@ -1,11 +1,5 @@
-import { hc } from 'hono/client';
-import type { AppType } from '$lib/api';
+import { sequence } from '@sveltejs/kit/hooks';
+import { apiHooks } from '$lib/hooks/api.hooks';
+import { authUserHooks } from '$lib/hooks/auth.hooks';
 
-export const handle = async ({ event, resolve }) => {
-	// HONO STUFF
-	const { api } = hc<AppType>('/', { fetch: event.fetch });
-	event.locals.api = api;
-
-	// SEND
-	return resolve(event);
-};
+export const handle = sequence(authUserHooks, apiHooks);

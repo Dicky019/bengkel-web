@@ -2,7 +2,6 @@ import type { RequestHandler } from './$types';
 import { google } from '$lib/auth/oauth';
 import { generateState, generateCodeVerifier } from 'arctic';
 import { redirect } from '@sveltejs/kit';
-// import { redirect } from 'sveltekit-flash-message/server';
 
 export const GET: RequestHandler = async (event) => {
 	const state = generateState();

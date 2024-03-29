@@ -11,7 +11,7 @@ export async function googleAdmin({ accessToken }: GetGoogleUser) {
 		providerId: googleData.id
 	});
 
-	console.log({ user });
+	// console.log({ user });
 
 	if (!user) {
 		throw throwErrorResponse(

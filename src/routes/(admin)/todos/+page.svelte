@@ -1,5 +1,10 @@
 <script lang="ts">
 	const { data } = $props();
+
+	import { getFlash } from 'sveltekit-flash-message';
+	import { page } from '$app/stores';
+
+	const flash = getFlash(page);
 </script>
 
 <div class="container flex flex-col items-center justify-center shadow-md">
@@ -35,8 +40,10 @@
 			/>
 		</div>
 
-		<button type="submit" class="mt-2 rounded-md bg-neutral-800 p-1 font-semibold text-white"
-			>Create</button
+		<button
+			on:click={() => flash.set({ type: 'loading', message: 'Waiting...' })}
+			type="submit"
+			class="mt-2 rounded-md bg-neutral-800 p-1 font-semibold text-white">Create</button
 		>
 		<a href="/auth/logout" class="mt-2 rounded-md bg-neutral-800 p-1 font-semibold text-white"
 			>Logout</a

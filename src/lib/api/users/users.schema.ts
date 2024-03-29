@@ -19,6 +19,6 @@ export const pacthUserSchema = updateUserSchema.partial();
 export const userIdSchema = baseSchema.pick({ id: true });
 export const usersQuerySchema = z.object({
 	page: z.coerce.number().default(1),
-	pageSize: z.coerce.number().default(8),
+	pageSize: z.coerce.number().default(10),
 	email: z.string().optional()
 });

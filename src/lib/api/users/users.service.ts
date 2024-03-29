@@ -5,10 +5,10 @@ import { throwErrorResponse } from '../helpers/response';
 import { HttpStatusError } from '../helpers/enum';
 
 export function getUsers(usersQuery: UsersQuery) {
-	if (usersQuery.email) {
-		const searchEmail = '%' + usersQuery.email + '%';
-		return usersRepo.getUserByEmail(searchEmail);
-	}
+	// if (usersQuery.email) {
+	// 	const searchEmail = '%' + usersQuery.email + '%';
+	// 	return usersRepo.getUserByEmail(searchEmail);
+	// }
 
 	return usersRepo.getUsers(usersQuery);
 }

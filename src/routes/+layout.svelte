@@ -14,7 +14,7 @@
 			const { type, message } = $flash;
 
 			toast[type](message);
-			console.log({ type, message });
+			// console.log({ type, message });
 
 			// toast.loading('waiting...');
 			// Clear the flash message to avoid double-toasting.

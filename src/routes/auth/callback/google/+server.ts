@@ -41,5 +41,9 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		sameSite: 'lax'
 	});
 
-	return redirect(VITE_VERCEL_URL, { type: 'loading', message: 'Waiting...' }, event.cookies);
+	return redirect(
+		VITE_VERCEL_URL + '/auth',
+		{ type: 'loading', message: 'Waiting...' },
+		event.cookies
+	);
 }
