@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import type { GetGoogleUser, GoogleUser, LoginSchema } from './auth.type';
 import type { NewUserSchema, User } from '../users/users.type';
 
-export async function googleAdmin(props: LoginSchema) {
+export async function googleAdmin(props: LoginSchema & { imageUrl: string }) {
 	const user = await getUser(props);
 	return user;
 }
@@ -20,13 +20,16 @@ export async function googleUser(props: NewUserSchema): Promise<User> {
 	return user;
 }
 
-const getUser = async (props: LoginSchema) => {
+const getUser = async (props: LoginSchema & { imageUrl: string }) => {
 	const user = await db.query.userTable.findFirst({
 		where: eq(userTable.email, props.email)
 	});
+	// console.log({ providerId: props.providerId, imageUrl: props.imageUrl, user });
+
 	if (user) {
 		await db.update(userTable).set({
-			providerId: props.providerId
+			providerId: props.providerId,
+			imageUrl: props.imageUrl
 		});
 	}
 

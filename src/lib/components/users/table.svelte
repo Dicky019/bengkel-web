@@ -7,8 +7,9 @@
 	import { plugin } from '$lib/components/table/utils';
 	import type { CompleteUsers } from '$lib/api/users/users.type';
 
-	const { users } = $props<{
+	const { users, title } = $props<{
 		users: CompleteUsers;
+		title: string;
 	}>();
 
 	const tableDerived = $derived(createTable(readable(users.data), plugin));
@@ -79,5 +80,12 @@
 </script>
 
 {#key users}
-	<DataTable data={users.data} meta={users.meta} table={tableDerived} {columns} {hideableCols} />
+	<DataTable
+		{title}
+		data={users.data}
+		meta={users.meta}
+		table={tableDerived}
+		{columns}
+		{hideableCols}
+	/>
 {/key}

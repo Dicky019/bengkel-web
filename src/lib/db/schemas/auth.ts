@@ -7,8 +7,8 @@ export const userTable = sqliteTable('user', {
 	id: text('id')
 		.primaryKey()
 		.$defaultFn(() => generateId(40)),
-	provider: text('provider', { enum: ['google', 'github'] }).notNull(),
-	providerId: text('provider_id', { length: 255 }).notNull(),
+	provider: text('provider', { enum: ['google', 'github'] }),
+	providerId: text('provider_id', { length: 255 }),
 	firstName: text('first_name', { length: 100 }).notNull(),
 	lastName: text('last_name', { length: 100 }).notNull(),
 	imageUrl: text('image_url', { length: 255 }).notNull().unique(),

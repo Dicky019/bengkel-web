@@ -20,7 +20,7 @@
 
 	function onSearch() {
 		const querySearch = `?${search !== '' ? `search=${search}` : ''}`;
-		console.log(querySearch);
+		// console.log(querySearch);
 		return goto(`${$page.url.origin}/${pathname}${querySearch}`, {
 			invalidateAll: true
 		});

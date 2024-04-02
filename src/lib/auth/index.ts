@@ -3,6 +3,7 @@ import { Lucia } from 'lucia';
 import { DrizzleSQLiteAdapter } from '@lucia-auth/adapter-drizzle';
 import { sessionTable, userTable } from '$lib/db/schemas/auth';
 import { convertCookie } from '$lib/api/helpers';
+import type { User } from '$lib/api/users/users.type';
 
 const adapter = new DrizzleSQLiteAdapter(db, sessionTable, userTable);
 
@@ -15,8 +16,8 @@ const lucia = new Lucia(adapter, {
 	},
 	getUserAttributes: (data) => {
 		return {
-			firstName: data.firstName,
-			lastName: data.lastName,
+			name: `${data.firstName} ${data.lastName}`,
+			initials: `${data.firstName.charAt(0)}${data.lastName.charAt(0)}`,
 			email: data.email,
 			imageUrl: data.imageUrl,
 			role: data.role
@@ -27,13 +28,7 @@ const lucia = new Lucia(adapter, {
 declare module 'lucia' {
 	interface Register {
 		Lucia: typeof lucia;
-		DatabaseUserAttributes: {
-			firstName: string;
-			lastName: string;
-			imageUrl: string;
-			email: string;
-			role: 'admin' | 'motir' | 'pengendara';
-		};
+		DatabaseUserAttributes: User;
 	}
 }
 

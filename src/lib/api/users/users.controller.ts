@@ -4,7 +4,12 @@ import { successResponse } from '../helpers/response';
 import type { MiddlewareVariables } from '../helpers/types';
 import * as userService from './users.service';
 import validatorSchemaMiddleware from '../middlewares/validator';
-import { usersQuerySchema } from './users.schema';
+import {
+	insertUserSchema,
+	updateUserSchema,
+	userIdsSchema,
+	usersQuerySchema
+} from './users.schema';
 
 const users = new Hono<{
 	Variables: MiddlewareVariables;
@@ -20,7 +25,27 @@ const users = new Hono<{
 	})
 	.get('/:id', async (c) => {
 		const user = await userService.getUser(c.req.param('id'));
-		return successResponse(c, user);
+		return successResponse(c, { data: user });
+	})
+	.post('/', validatorSchemaMiddleware('json', insertUserSchema), async (c) => {
+		const userJson = c.req.valid('json');
+		const user = await userService.createUser(userJson);
+		return successResponse(c, { data: user });
+	})
+	.put('/', validatorSchemaMiddleware('json', updateUserSchema), async (c) => {
+		const userJson = c.req.valid('json');
+		const user = await userService.updateUser(userJson);
+		return successResponse(c, { data: user });
+	})
+	.delete('/:id', async (c) => {
+		const userId = c.req.param('id');
+		const user = await userService.deleteUser(userId);
+		return successResponse(c, { data: user });
+	})
+	.delete('/', validatorSchemaMiddleware('json', userIdsSchema), async (c) => {
+		const userIdsJson = c.req.valid('json');
+		const user = await userService.deleteMultyUser(userIdsJson.usersIds);
+		return successResponse(c, { data: user });
 	});
 
 export default users;

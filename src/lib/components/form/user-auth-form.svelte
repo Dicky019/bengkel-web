@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icons from './icons';
+	import Icons from '../icons';
 	import { Button } from '$components/ui/button';
 	import { cn } from '$lib/utils';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';

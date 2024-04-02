@@ -2,10 +2,12 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
 	import { MoreHorizontal } from 'lucide-svelte';
+	import { page } from '$app/stores';
 
 	const { id } = $props<{
 		id: string;
 	}>();
+	const title = $page.data.adminData.title.toLowerCase();
 </script>
 
 <DropdownMenu.Root>
@@ -18,12 +20,20 @@
 	<DropdownMenu.Content>
 		<DropdownMenu.Group>
 			<DropdownMenu.Label>Actions</DropdownMenu.Label>
-			<DropdownMenu.Item on:click={() => navigator.clipboard.writeText(id)}>
-				Copy payment ID
+			<!-- <DropdownMenu.Item>
+				<a href={`${title}/${id}/edit`}>Edit</a>
+			</DropdownMenu.Item> -->
+			<DropdownMenu.Separator />
+			<DropdownMenu.Item class="cursor-pointer" href={`${title}/${id}/edit`}>Edit</DropdownMenu.Item
+			>
+			<DropdownMenu.Item>
+				<form method="post" action={title + '?/delete'}>
+					<input hidden value={id} name="id" />
+					<button type="submit">Delete</button>
+				</form>
 			</DropdownMenu.Item>
 		</DropdownMenu.Group>
-		<DropdownMenu.Separator />
-		<DropdownMenu.Item>View customer</DropdownMenu.Item>
-		<DropdownMenu.Item>View payment details</DropdownMenu.Item>
+
+		<!-- <DropdownMenu.Item class="cursor-pointer" href={`${title}/${id}`}>View</DropdownMenu.Item> -->
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

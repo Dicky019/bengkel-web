@@ -8,7 +8,8 @@ export async function googleAdmin({ accessToken }: GetGoogleUser) {
 
 	const user = await authRepo.googleAdmin({
 		email: googleData.email,
-		providerId: googleData.id
+		providerId: googleData.id,
+		imageUrl: googleData.picture
 	});
 
 	// console.log({ user });

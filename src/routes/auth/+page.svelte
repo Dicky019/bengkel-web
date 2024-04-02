@@ -1,7 +1,7 @@
 <script lang="ts">
 	// import { Button } from '$components/ui/button';
 	import DarkModeLightSwitch from '$lib/components/dark-mode-light-switch.svelte';
-	import UserAuthForm from '$lib/components/user-auth-form.svelte';
+	import UserAuthForm from '$lib/components/form/user-auth-form.svelte';
 	const { data } = $props();
 </script>
 

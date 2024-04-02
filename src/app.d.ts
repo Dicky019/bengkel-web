@@ -10,6 +10,7 @@ declare global {
 		}
 		interface PageData {
 			flash?: { type: 'success' | 'error' | 'loading'; message: string };
+			adminData: { isSearch: boolean; title: string };
 		}
 		// interface PageData {}
 		// interface PageState {}

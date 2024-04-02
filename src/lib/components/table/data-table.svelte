@@ -7,7 +7,7 @@
 	import type { Meta } from '$lib/utils/types';
 	import { cn } from '$lib/utils';
 	import { fade } from 'svelte/transition';
-	import { Button } from '../ui/button';
+	import { Button, buttonVariants } from '../ui/button';
 	import * as DropdownMenu from '../ui/dropdown-menu';
 
 	import type {
@@ -95,15 +95,35 @@
 			invalidateAll: true
 		});
 	};
+
+	const showingValue = meta.current_page * (qPerPage ? Number(qPerPage) : 10);
+
+	// console.log({ showingValue, meta, f: meta.current_page * 10 });
+
+	const { title } = $page.data.adminData;
+
+	// const title = $page.data.adminData.title.toLowerCase();
+	// const usersId = $derived(Object.keys($selectedDataIds).toString());
+
+	// console.log({ usersId });
+
+	let users = $state('');
+
+	$effect(() => {
+		users = JSON.stringify(selectedData);
+	});
 </script>
 
 <div class="w-full">
 	<div class="flex items-center gap-x-2 pb-4">
 		<!-- <SearchForm /> -->
-		<Button>New Users</Button>
+		<a href={`/${title.toLocaleLowerCase()}/new`} class={buttonVariants()}>New {title}</a>
 		{#if selectedData.length !== 0}
 			<div out:fade={{ duration: 100 }} in:fade={{ duration: 300, delay: 100 }}>
-				<Button variant="destructive">Delete {selectedData.length}</Button>
+				<form method="post" action={`/${title.toLocaleLowerCase()}?/deleteAll`}>
+					<input hidden bind:value={users} name="users" />
+					<Button type="submit" variant="destructive">Delete {selectedData.length}</Button>
+				</form>
 			</div>
 		{/if}
 		<DropdownMenu.Root>
@@ -187,13 +207,16 @@
 			</Tables.Body>
 		</Tables.Root>
 	</div>
-	<div class={cn('flex items-center justify-end space-x-2 py-4')}>
-		<div class="flex-1 text-sm text-muted-foreground">
-			Total {meta.total} |
-			{#key selectedData.length}
-				<span in:fade={{ duration: 300, delay: 100 }}>{selectedData.length}</span> of
+	<div class="flex items-center justify-between space-x-2 py-4">
+		<div class="text-sm font-light text-muted-foreground">
+			{#key meta}
+				Showing
+				<span in:fade={{ duration: 300, delay: 100 }}
+					>1-{showingValue > meta.total ? meta.total : showingValue}</span
+				>
+				of {meta.total}
 			{/key}
-			{$rows.length} row(s) selected.
+			{title.toLocaleLowerCase()}
 		</div>
 		<div class="flex items-center space-x-6 lg:space-x-8">
 			<div class="flex items-center space-x-2">

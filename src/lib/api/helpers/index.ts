@@ -70,7 +70,7 @@ export async function withPagination<T extends SQLiteTable>({
 
 	const data = whereColumn ? await queryDb.where(whereColumn(table)).all() : await queryDb.all();
 
-	console.log({ total, data: data.length });
+	// console.log({ total, data: data.length });
 
 	const lastPage = Math.ceil(total / pageSize);
 	const prev = page > 1 ? page - 1 : null;

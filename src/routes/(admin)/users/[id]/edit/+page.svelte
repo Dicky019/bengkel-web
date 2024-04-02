@@ -5,5 +5,5 @@
 </script>
 
 <!-- <AdminMainLayout layout={data.layout} title="New Users"> -->
-<UsersForm formUser={data.form} />
+<UsersForm formUser={data.form} data={data.user} />
 <!-- </AdminMainLayout> -->

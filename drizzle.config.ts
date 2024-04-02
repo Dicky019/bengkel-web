@@ -7,7 +7,7 @@ export default {
 	out: './drizzle/migrations',
 	driver: 'turso',
 	dbCredentials: {
-		url: process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'http://127.0.0.1:8080',
-		authToken: process.env.NODE_ENV === 'production' ? process.env.DATABASE_AUTH_TOKEN : undefined
+		url: process.env.DATABASE_URL!,
+		authToken: process.env.DATABASE_AUTH_TOKEN
 	}
 } satisfies Config;

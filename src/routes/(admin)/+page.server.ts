@@ -1,3 +1,5 @@
+import { redirect } from '@sveltejs/kit';
+
 export const load = async () => {
-	return {};
+	return redirect(301, '/users');
 };

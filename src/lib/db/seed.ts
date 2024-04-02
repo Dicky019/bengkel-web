@@ -21,8 +21,8 @@ enum Provider {
 
 const main = async () => {
 	const client = createClient({
-		url: process.env.DATABASE_URL!,
-		authToken: process.env.DATABASE_AUTH_TOKEN!
+		url: 'http://127.0.0.1:8080'
+		// authToken: process.env.DATABASE_AUTH_TOKEN!
 	});
 
 	const db = drizzle(client);
@@ -31,12 +31,12 @@ const main = async () => {
 	const isAdmin = await db
 		.select()
 		.from(userTable)
-		.where(eq(userTable.email, 'dicky46darmawan@gmail.com'))
+		.where(eq(userTable.email, 'dicky93darmawan@gmail.com'))
 		.get();
 
 	if (!isAdmin) {
 		data.push({
-			email: 'dicky46darmawan@gmail.com',
+			email: 'dicky93darmawan@gmail.com',
 			firstName: 'Dicky',
 			lastName: 'Darmawan',
 			imageUrl: faker.image.avatar(),

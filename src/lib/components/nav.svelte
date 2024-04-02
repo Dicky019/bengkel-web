@@ -3,9 +3,19 @@
 	import { cn } from '$lib/utils';
 	import * as Tooltip from './ui/tooltip/index';
 	import type { Route } from '$lib/config/index';
+	import { page } from '$app/stores';
 
-	export let isCollapsed: boolean;
-	export let routes: Route[];
+	// export let isCollapsed: boolean;
+	// export let routes: Route[];
+	const { isCollapsed, routes } = $props<{
+		isCollapsed: boolean;
+		routes: Route[];
+	}>();
+	const { title } = $derived($page.data.adminData);
+
+	const isActive = (path: string) => {
+		return title.toLocaleLowerCase() === path.toLocaleLowerCase();
+	};
 </script>
 
 <div data-collapsed={isCollapsed} class="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2">
@@ -19,11 +29,11 @@
 						<Button
 							href={route.href}
 							builders={[builder]}
-							variant={route.variant}
+							variant={isActive(route.title) ? 'default' : 'ghost'}
 							size="icon"
 							class={cn(
 								'size-10',
-								route.variant === 'default' &&
+								isActive(route.title) &&
 									'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white'
 							)}
 						>
@@ -38,15 +48,15 @@
 			{:else}
 				<Button
 					href={route.href}
-					variant={route.variant}
+					variant={isActive(route.title) ? 'default' : 'ghost'}
 					size="default"
 					class={cn('justify-start', {
 						'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white':
-							route.variant === 'default'
+							isActive(route.title) && 'default'
 					})}
 				>
 					<svelte:component this={route.icon} class="mr-4 size-6" aria-hidden="true" />
-					<span class="">{route.title}</span>
+					<span>{route.title}</span>
 				</Button>
 			{/if}
 		{/each}

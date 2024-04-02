@@ -5,7 +5,8 @@ import type {
 	insertUserSchema,
 	pacthUserSchema,
 	updateUserSchema,
-	usersQuerySchema
+	usersQuerySchema,
+	userIdsSchema
 } from './users.schema';
 import type { ClientType } from '..';
 
@@ -16,6 +17,7 @@ export type NewUserSchema = z.infer<typeof insertUserSchema>;
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 export type PacthUserSchema = z.infer<typeof pacthUserSchema>;
 export type UserId = z.infer<typeof userIdSchema>['id'];
+export type UserIds = z.infer<typeof userIdsSchema>['usersIds'];
 
 type CompleteApiUsers = ClientType['api']['users'];
 

@@ -8,25 +8,25 @@ export const authUserHooks: Handle = async ({ event, resolve }) => {
 
 	const isNotLoginRoutesNotUser = !sessionId && !isAuthRoutes;
 
-	console.log({
-		sessionId: sessionId,
-		isAuthRoutes: isAuthRoutes,
-		isApiRoutes
-	});
+	// console.log({
+	// 	sessionId: sessionId,
+	// 	isAuthRoutes: isAuthRoutes,
+	// 	isApiRoutes
+	// });
 
 	if (sessionId) {
-		console.log('sessionId', { pathname: event.url.pathname });
+		// console.log('sessionId', { pathname: event.url.pathname });
 		return resolve(event);
 	}
 
 	if (isApiRoutes) {
-		console.log('isApiRoutes || sessionId', { pathname: event.url.pathname });
+		// console.log('isApiRoutes || sessionId', { pathname: event.url.pathname });
 
 		return resolve(event);
 	}
 
 	if (isNotLoginRoutesNotUser) {
-		console.log('isNotLoginRoutesNotUser', { pathname: event.url.pathname });
+		// console.log('isNotLoginRoutesNotUser', { pathname: event.url.pathname });
 		return redirect(301, '/auth');
 	}
 
