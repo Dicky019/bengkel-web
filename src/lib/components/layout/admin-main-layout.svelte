@@ -107,7 +107,9 @@
 								<Icons.logout class="size-4" aria-hidden="true" />
 							</Button>
 						</Tooltip.Trigger>
-						<Tooltip.Content side="right" class="flex items-center gap-4">Logout</Tooltip.Content>
+						<Tooltip.Content side={isCollapsed ? 'right' : 'top'} class="flex items-center gap-4"
+							>Logout</Tooltip.Content
+						>
 					</Tooltip.Root>
 				</div>
 			</div>
