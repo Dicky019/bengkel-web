@@ -6,23 +6,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { parseApiResponse } from '$lib/utils/index.js';
 import { VITE_VERCEL_URL } from '$env/static/private';
 
-export const load: PageServerLoad = async ({ locals, cookies, params }) => {
-	// const userRes = await parseApiResponse(
-	// 	locals.api.users[':id'].$get({
-	// 		param: params
-	// 	})
-	// );
-
-	// if (userRes.error) {
-	// 	return redirect(
-	// 		VITE_VERCEL_URL + 'users',
-	// 		{ type: 'error', message: userRes.message },
-	// 		cookies
-	// 	);
-	// }
-
-	// const { data } = userRes;
-
+export const load: PageServerLoad = async () => {
 	return {
 		form: await superValidate(zod(insertUserSchema))
 		// user: data
@@ -39,7 +23,7 @@ export const actions = {
 
 		const updateUser = await parseApiResponse(
 			locals.api.users.$put({
-				json: { ...form.data, id: event.params.id }
+				json: { ...form.data, id: event.params.id, imageUrl: null }
 			})
 		);
 

@@ -11,7 +11,7 @@ export const userTable = sqliteTable('user', {
 	providerId: text('provider_id', { length: 255 }),
 	firstName: text('first_name', { length: 100 }).notNull(),
 	lastName: text('last_name', { length: 100 }).notNull(),
-	imageUrl: text('image_url', { length: 255 }).notNull().unique(),
+	imageUrl: text('image_url', { length: 255 }),
 	email: text('email', { length: 100 }).notNull().unique(),
 	role: text('role', { enum: ['admin', 'motir', 'pengendara'] }).notNull(),
 	createdAt: integer('created_at', { mode: 'timestamp' })

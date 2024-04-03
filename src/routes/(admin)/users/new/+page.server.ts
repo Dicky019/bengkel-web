@@ -1,4 +1,4 @@
-import { insertUserSchema, updateUserSchema } from '$lib/api/users/users.schema.js';
+import { insertUserSchema } from '$lib/api/users/users.schema.js';
 import { redirect, setFlash } from 'sveltekit-flash-message/server';
 // import { layoutStore } from '$lib/stores/layout.store.js';
 import type { PageServerLoad } from './$types.js';

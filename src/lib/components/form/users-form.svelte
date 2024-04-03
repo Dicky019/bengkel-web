@@ -6,7 +6,7 @@
 	import { insertUserSchema } from '$lib/api/users/users.schema';
 	import type { NewUserSchema } from '$lib/api/users/users.type';
 	import * as Select from '../ui/select';
-	import { faker } from '@faker-js/faker';
+	// import { faker } from '@faker-js/faker';
 
 	const { formUser, data } = $props<{
 		formUser: SuperValidated<NewUserSchema>;
@@ -40,7 +40,7 @@
 
 	$effect(() => {
 		if (!data) {
-			$formData.imageUrl = faker.image.avatarGitHub();
+			// $formData.imageUrl = faker.image.avatarGitHub();
 		} else {
 			formData.set(data);
 		}
