@@ -2,20 +2,13 @@ import { db } from '$lib/db';
 import { userTable } from '$lib/db/schemas/auth';
 import { asc, eq, like } from 'drizzle-orm';
 import { withPagination } from '../helpers';
-import type {
-	NewUserSchema,
-	UpdateUserSchema,
-	User,
-	UserId,
-	UserIds,
-	UsersQuery
-} from './users.type';
+import type { NewUserSchema, UpdateUserSchema, UserId, UserIds, UsersQuery } from './users.type';
 
 export async function getUsers({ page, pageSize, email }: UsersQuery) {
 	const searchEmail = '%' + email + '%';
 	const usersPagination = await withPagination({
 		table: userTable,
-		orderByColumn: (table) => asc(table.createdAt),
+		orderByColumn: (table) => asc(table.firstName),
 		whereColumn: email ? (table) => like(table.email, searchEmail) : undefined,
 		page,
 		pageSize

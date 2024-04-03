@@ -1,11 +1,13 @@
-import { db } from '$lib/db';
+// import pg from 'pg';
+// import { drizzle } from 'drizzle-orm/node-postgres';
 import { Lucia } from 'lucia';
-import { DrizzleSQLiteAdapter } from '@lucia-auth/adapter-drizzle';
+import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
 import { sessionTable, userTable } from '$lib/db/schemas/auth';
 import { convertCookie } from '$lib/api/helpers';
 import type { User } from '$lib/api/users/users.type';
+import { db } from '$lib/db';
 
-const adapter = new DrizzleSQLiteAdapter(db, sessionTable, userTable);
+const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
 
 const lucia = new Lucia(adapter, {
 	sessionCookie: {

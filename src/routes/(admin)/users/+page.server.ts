@@ -21,7 +21,7 @@ export const load = async ({ url, locals }) => {
 		})
 	);
 
-	// console.log({ usersdadad: users });
+	console.log(users);
 
 	// You need to use the SvelteKit fetch function here
 	const page = parseInt(pageString ?? '1');

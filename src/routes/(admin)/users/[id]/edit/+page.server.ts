@@ -23,7 +23,14 @@ export const actions = {
 
 		const updateUser = await parseApiResponse(
 			locals.api.users.$put({
-				json: { ...form.data, id: event.params.id, imageUrl: null }
+				json: {
+					id: event.params.id,
+					email: form.data.email,
+					firstName: form.data.firstName,
+					lastName: form.data.lastName,
+					imageUrl: form.data.imageUrl ?? null,
+					role: form.data.role
+				}
 			})
 		);
 

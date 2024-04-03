@@ -97,6 +97,7 @@
 	};
 
 	const showingValue = meta.current_page * (qPerPage ? Number(qPerPage) : 10);
+	const preValue = meta?.prev ?? 0 * (qPerPage ? Number(qPerPage) : 10);
 
 	// console.log({ showingValue, meta, f: meta.current_page * 10 });
 
@@ -212,8 +213,8 @@
 			{#key meta}
 				Showing
 				<span in:fade={{ duration: 300, delay: 100 }}
-					>1-{showingValue > meta.total ? meta.total : showingValue}</span
-				>
+					>{preValue === 0 ? 1 : preValue}-{showingValue > meta.total ? meta.total : showingValue}
+				</span>
 				of {meta.total}
 			{/key}
 			{title.toLocaleLowerCase()}

@@ -1,15 +1,20 @@
 import { relations } from 'drizzle-orm';
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { pgTable, varchar, uuid, timestamp, boolean, text } from 'drizzle-orm/pg-core';
 import { userTable } from './auth';
 
-export const todoTable = sqliteTable('todo', {
-	id: text('id', { length: 100 }).primaryKey(),
-	name: text('name').notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-	completed: integer('completed', { mode: 'boolean' }).notNull(),
-	userId: text('user_id', { length: 100 })
-		.references(() => userTable.id)
+export const todoTable = pgTable('todo', {
+	id: uuid('id').primaryKey().defaultRandom(),
+	name: varchar('name').notNull(),
+	createdAt: timestamp('createdAt', {
+		withTimezone: true,
+		mode: 'date'
+	})
 		.notNull()
+		.defaultNow(),
+	completed: boolean('completed').notNull().default(false),
+	userId: text('user_id')
+		.notNull()
+		.references(() => userTable.id)
 });
 
 export const todoRelations = relations(todoTable, ({ one }) => ({

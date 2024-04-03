@@ -1,7 +1,7 @@
 import type { Cookie } from 'lucia';
 import { HttpStatus, HttpStatusError, HttpStatusSuccess } from './enum';
-import type { SQLiteTable } from 'drizzle-orm/sqlite-core';
-import { count, eq, type SQL } from 'drizzle-orm';
+import type { PgColumn, PgSelect, PgTable } from 'drizzle-orm/pg-core';
+import { count, type SQL } from 'drizzle-orm';
 import { db } from '$lib/db';
 
 type THttpStatusErrorKeys = keyof typeof HttpStatusError;
@@ -40,7 +40,7 @@ export function convertCookie(cookie: Cookie) {
 	} as const;
 }
 
-export async function withPagination<T extends SQLiteTable>({
+export async function withPagination<T extends PgTable>({
 	table,
 	orderByColumn,
 	whereColumn,
@@ -48,17 +48,15 @@ export async function withPagination<T extends SQLiteTable>({
 	pageSize = 10
 }: {
 	table: T;
-	orderByColumn: (table: T) => SQL;
+	orderByColumn: (table: T) => PgColumn | SQL | SQL.Aliased;
 	whereColumn?: (table: T) => SQL;
 	page?: number;
 	pageSize?: number;
 }) {
 	const queryTotal = db.select({ count: count() }).from(table);
-	const totalQuery = whereColumn
-		? await queryTotal.where(whereColumn(table)).get()
-		: await queryTotal.get();
+	const totalQuery = whereColumn ? await queryTotal.where(whereColumn(table)) : await queryTotal;
 
-	const total = totalQuery?.count ?? 0;
+	const total = totalQuery[0]?.count ?? 0;
 	const offset = page > 0 ? pageSize * (page - 1) : 0;
 
 	const queryDb = db
@@ -68,7 +66,7 @@ export async function withPagination<T extends SQLiteTable>({
 		.limit(pageSize)
 		.offset(offset);
 
-	const data = whereColumn ? await queryDb.where(whereColumn(table)).all() : await queryDb.all();
+	const data = whereColumn ? await queryDb.where(whereColumn(table)) : await queryDb;
 
 	// console.log({ total, data: data.length });
 

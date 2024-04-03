@@ -1,30 +1,54 @@
 import { relations } from 'drizzle-orm/relations';
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { todoTable } from './todo';
+import {
+	pgEnum,
+	pgTable,
+	varchar,
+	timestamp,
+	uuid,
+	unique,
+	index,
+	text
+} from 'drizzle-orm/pg-core';
 import { generateId } from 'lucia';
 
-export const userTable = sqliteTable('user', {
-	id: text('id')
-		.primaryKey()
-		.$defaultFn(() => generateId(40)),
-	provider: text('provider', { enum: ['google', 'github'] }),
-	providerId: text('provider_id', { length: 255 }),
-	firstName: text('first_name', { length: 100 }).notNull(),
-	lastName: text('last_name', { length: 100 }).notNull(),
-	imageUrl: text('image_url', { length: 255 }),
-	email: text('email', { length: 100 }).notNull().unique(),
-	role: text('role', { enum: ['admin', 'motir', 'pengendara'] }).notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' })
-		.$defaultFn(() => new Date())
-		.notNull()
-});
+export const providerEnum = pgEnum('provider', ['google', 'github']);
+export const roleEnum = pgEnum('role', ['admin', 'motir', 'pengendara']);
 
-export const sessionTable = sqliteTable('session', {
-	id: text('id').notNull().primaryKey(),
+export const userTable = pgTable(
+	'user',
+	{
+		id: text('id')
+			.primaryKey()
+			.$default(() => generateId(40)),
+		provider: providerEnum('provider'),
+		providerId: varchar('provider_id', { length: 255 }),
+		firstName: varchar('first_name', { length: 100 }).notNull(),
+		lastName: varchar('last_name', { length: 100 }).notNull(),
+		imageUrl: varchar('image_url', { length: 255 }),
+		email: varchar('email', { length: 100 }).notNull().unique(),
+		role: roleEnum('role').notNull(),
+		createdAt: timestamp('createdAt', {
+			withTimezone: true,
+			mode: 'date'
+		})
+			.notNull()
+			.defaultNow()
+	},
+	(t) => ({
+		indexEmail: index().on(t.email),
+		indexId: index().on(t.id)
+	})
+);
+
+export const sessionTable = pgTable('session', {
+	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
 		.references(() => userTable.id),
-	expiresAt: integer('expires_at').notNull()
+	expiresAt: timestamp('expires_at', {
+		withTimezone: true,
+		mode: 'date'
+	}).notNull()
 });
 
 export const sessionRelations = relations(sessionTable, ({ one }) => ({
@@ -35,6 +59,5 @@ export const sessionRelations = relations(sessionTable, ({ one }) => ({
 }));
 
 export const userRelations = relations(userTable, ({ many }) => ({
-	sessions: many(sessionTable),
-	todos: many(todoTable)
+	sessions: many(sessionTable)
 }));

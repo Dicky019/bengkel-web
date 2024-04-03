@@ -5,9 +5,8 @@ import 'dotenv/config';
 export default {
 	schema: './src/lib/db/schemas',
 	out: './drizzle/migrations',
-	driver: 'turso',
+	driver: 'pg',
 	dbCredentials: {
-		url: process.env.DATABASE_URL!,
-		authToken: process.env.DATABASE_AUTH_TOKEN
+		connectionString: process.env.DATABASE_URL!
 	}
 } satisfies Config;
