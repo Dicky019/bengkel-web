@@ -61,7 +61,10 @@ export const authMiddleware = (
 
 		const isIncluded: boolean = allowedRoles.includes(user.role);
 		if (!isIncluded) {
-			throw throwErrorResponse(HttpStatus.FORBIDDEN, 'Anda Tidak Di Ijinkan');
+			throw throwErrorResponse(
+				HttpStatus.FORBIDDEN,
+				'Anda Tidak Di Ijinkan dengan role ' + user.role
+			);
 		}
 
 		return next();
