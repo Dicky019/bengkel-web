@@ -56,7 +56,7 @@ export const ensureLoggedIn = (
 export const authMiddleware = (
 	allowedRoles: UserRole[] | undefined = ['admin', 'motir', 'pengendara']
 ) => {
-	return createMiddleware(async (c, next) => {
+	return createMiddleware((c, next) => {
 		const { user } = ensureLoggedIn(c);
 
 		const isIncluded: boolean = allowedRoles.includes(user.role);
