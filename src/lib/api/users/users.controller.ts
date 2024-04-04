@@ -10,14 +10,12 @@ import {
 	userIdsSchema,
 	usersQuerySchema
 } from './users.schema';
+import { authMiddleware } from '../middlewares/auth';
 
 const users = new Hono<{
 	Variables: MiddlewareVariables;
 }>()
-	.get('/me', (c) => {
-		const { session, user } = c.var;
-		return successResponse(c, { data: { session, user } });
-	})
+	.use(authMiddleware())
 	.get('/', validatorSchemaMiddleware('query', usersQuerySchema), async (c) => {
 		const usersQuery = c.req.valid('query');
 		const users = await userService.getUsers(usersQuery);

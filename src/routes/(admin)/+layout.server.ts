@@ -1,10 +1,10 @@
 import { parseApiResponse } from '$lib/utils/index.js';
-import { error, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 
 export const load = async (event) => {
 	const layoutCookie = event.cookies.get('PaneForge:layout');
 	const collapsedCookie = event.cookies.get('PaneForge:collapsed');
-	const resUser = await parseApiResponse(event.locals.api.users.me.$get());
+	const resUser = await parseApiResponse(event.locals.api.auth.me.$get());
 
 	if (resUser.error) {
 		return redirect(301, '/login');

@@ -53,7 +53,7 @@ export const ensureLoggedIn = (
 	return { session, user } as { session: Session; user: User };
 };
 
-export const authMiddleware = async (
+export const authMiddleware = (
 	allowedRoles: UserRole[] | undefined = ['admin', 'motir', 'pengendara']
 ) => {
 	return createMiddleware(async (c, next) => {
