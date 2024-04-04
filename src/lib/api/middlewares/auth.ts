@@ -47,7 +47,7 @@ export const ensureLoggedIn = (
 	const user = c.get('user');
 
 	if (!session && !user) {
-		throw throwErrorResponse(HttpStatusError.UNAUTHORIZED, 'Anda Tidak Di Login');
+		throw throwErrorResponse(HttpStatusError.UNAUTHORIZED, 'Anda Tidak Login');
 	}
 
 	return { session, user } as { session: Session; user: User };
