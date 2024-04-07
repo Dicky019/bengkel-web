@@ -1,3 +1,4 @@
+import type { User } from 'lucia';
 import { HttpStatus } from '../helpers/enum';
 import { throwErrorResponse } from '../helpers/response';
 import * as authRepo from './auth.repository';
@@ -47,4 +48,24 @@ export async function googleUser({
 	});
 
 	return user;
+}
+
+export async function getUser(props: User) {
+	const getUserByRole = await authRepo.getUserByRole({
+		id: props.id,
+		role: props.role
+	});
+
+	if (getUserByRole) {
+		const { user, ...user_detail } = getUserByRole;
+		return {
+			user,
+			user_detail
+		};
+	}
+
+	return {
+		user: props,
+		user_detail: null
+	};
 }

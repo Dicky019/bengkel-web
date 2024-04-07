@@ -40,6 +40,33 @@ const getUser = async (props: LoginSchema & { imageUrl?: string }) => {
 	return user;
 };
 
+export const getUserByRole = async ({
+	role,
+	id
+}: {
+	role: 'motir' | 'pengendara' | 'admin';
+	id: string;
+}) => {
+	if (role === 'pengendara') {
+		return await db.query.pengendaraTable.findFirst({
+			where: eq(userTable.id, id),
+			with: {
+				user: true
+			}
+		});
+	}
+	// console.log({ providerId: props.providerId, imageUrl: props.imageUrl, user });
+
+	if (role === 'motir') {
+		return await db.query.pengendaraTable.findFirst({
+			where: eq(userTable.id, id),
+			with: {
+				user: true
+			}
+		});
+	}
+};
+
 export async function googleUserInfo({ accessToken }: GetGoogleUser) {
 	const googleRes = await fetch('https://www.googleapis.com/oauth2/v1/userinfo', {
 		headers: {
