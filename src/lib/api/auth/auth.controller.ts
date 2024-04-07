@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { setCookie } from 'hono/cookie';
 
-import { createSessionCookieLucia } from '$lib/auth';
+import { createSessionCookieLucia, createSessionTokenLucia } from '$lib/auth';
 
 import { successResponse } from '$api/helpers/response';
 import validatorSchemaMiddleware from '$api/middlewares/validator';
@@ -39,13 +39,9 @@ const authRouter = new Hono<{
 	.post('/google-user', validatorSchemaMiddleware('json', authGoogleUserSchema), async (c) => {
 		const { accessToken, role } = c.req.valid('json');
 		const user = await authService.googleUser({ accessToken, role });
-		const cookie = await createSessionCookieLucia(user.id);
+		const token = await createSessionTokenLucia(user.id);
 
-		setCookie(c, cookie.name, cookie.value, {
-			path: '.',
-			...cookie.attributes
-		});
-		return successResponse(c, { data: user });
+		return successResponse(c, { data: user, token });
 	});
 
 export default authRouter;

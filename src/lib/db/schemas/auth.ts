@@ -10,6 +10,7 @@ import {
 	text
 } from 'drizzle-orm/pg-core';
 import { generateId } from 'lucia';
+import { pengendaraTable } from './pengendara';
 
 export const providerEnum = pgEnum('provider', ['google', 'github']);
 export const roleEnum = pgEnum('role', ['admin', 'motir', 'pengendara']);
@@ -58,6 +59,7 @@ export const sessionRelations = relations(sessionTable, ({ one }) => ({
 	})
 }));
 
-export const userRelations = relations(userTable, ({ many }) => ({
-	sessions: many(sessionTable)
+export const userRelations = relations(userTable, ({ many, one }) => ({
+	sessions: many(sessionTable),
+	pengendara: one(pengendaraTable)
 }));

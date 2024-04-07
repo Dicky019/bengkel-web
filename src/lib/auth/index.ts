@@ -44,4 +44,12 @@ export const createSessionCookieLucia = async (id: string) => {
 	return convertCookie(cookie);
 };
 
+export const createSessionTokenLucia = async (id: string) => {
+	const session = await lucia.createSession(id, {
+		expiresIn: 60 * 60 * 24 * 30
+	});
+
+	return session.id;
+};
+
 export default lucia;

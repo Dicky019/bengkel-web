@@ -10,7 +10,16 @@ import type { MiddlewareVariables } from '../helpers/types';
 import type { UserRole } from '../users/users.type';
 
 export const authMiddlewareLucia = createMiddleware(async (c, next) => {
-	const sessionId = getCookie(c, lucia.sessionCookieName);
+	const authorizationHeader = c.req.header('Authorization');
+
+	// console.log({ authorizationHeader });
+
+	// const sessionId = lucia.readBearerToken(authorizationHeader ?? "");
+	const sessionId = authorizationHeader
+		? lucia.readBearerToken(authorizationHeader)
+		: getCookie(c, lucia.sessionCookieName);
+
+	// console.log({ sessionId });
 
 	if (!sessionId) {
 		c.set('session', null);

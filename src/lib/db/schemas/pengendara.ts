@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, varchar, uuid, timestamp, boolean, text } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, uuid, timestamp, text } from 'drizzle-orm/pg-core';
 import { userTable } from './auth';
 
 export const pengendaraTable = pgTable('pengendara', {

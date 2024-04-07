@@ -57,7 +57,7 @@ export async function getUser(props: User) {
 	});
 
 	if (getUserByRole) {
-		const { user, ...user_detail } = getUserByRole;
+		const { user, user_detail } = getUserByRole;
 		return {
 			user,
 			user_detail

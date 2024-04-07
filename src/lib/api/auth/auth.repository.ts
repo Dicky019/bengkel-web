@@ -48,22 +48,36 @@ export const getUserByRole = async ({
 	id: string;
 }) => {
 	if (role === 'pengendara') {
-		return await db.query.pengendaraTable.findFirst({
+		const user = await db.query.userTable.findFirst({
 			where: eq(userTable.id, id),
 			with: {
-				user: true
+				pengendara: true
 			}
 		});
+
+		return user
+			? {
+					user,
+					user_detail: user.pengendara
+				}
+			: null;
 	}
 	// console.log({ providerId: props.providerId, imageUrl: props.imageUrl, user });
 
 	if (role === 'motir') {
-		return await db.query.pengendaraTable.findFirst({
+		const user = await db.query.userTable.findFirst({
 			where: eq(userTable.id, id),
 			with: {
-				user: true
+				pengendara: true
 			}
 		});
+
+		return user
+			? {
+					user,
+					user_detail: user.pengendara
+				}
+			: null;
 	}
 };
 
