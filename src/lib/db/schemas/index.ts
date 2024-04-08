@@ -1,3 +1,6 @@
-export * as auth from './auth';
-export * as todo from './todo';
-export * as pengendara from './pengendara';
+import * as auth from './auth';
+import * as todo from './todo';
+import * as pengendara from './pengendara';
+import * as bengkel from './bengkel';
+
+export const schemas = { ...auth, ...todo, ...pengendara, ...bengkel };

@@ -4,6 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
+		"dev:vercel": "pnpx vercel dev --port 5173",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -53,6 +54,7 @@
 		"@vercel/postgres": "^0.8.0",
 		"arctic": "^1.2.1",
 		"bits-ui": "^0.19.6",
+		"cloudinary": "^2.1.0",
 		"clsx": "^2.1.0",
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.30.1",

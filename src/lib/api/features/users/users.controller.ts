@@ -1,16 +1,16 @@
 // routes/users.ts
 import { Hono } from 'hono';
-import { successResponse } from '../helpers/response';
-import type { MiddlewareVariables } from '../helpers/types';
+import { successResponse } from '../../helpers/response';
+import type { MiddlewareVariables } from '../../helpers/types';
 import * as userService from './users.service';
-import validatorSchemaMiddleware from '../middlewares/validator';
+import validatorSchemaMiddleware from '../../middlewares/validator';
 import {
 	insertUserSchema,
 	updateUserSchema,
 	userIdsSchema,
 	usersQuerySchema
 } from './users.schema';
-import { authMiddleware } from '../middlewares/auth';
+import { authMiddleware } from '../../middlewares/auth';
 
 const users = new Hono<{
 	Variables: MiddlewareVariables;

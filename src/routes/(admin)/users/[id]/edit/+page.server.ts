@@ -1,4 +1,4 @@
-import { insertUserSchema } from '$lib/api/users/users.schema.js';
+import { insertUserSchema } from '$lib/api/features/users/users.schema.js';
 import { redirect, setFlash } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from './$types.js';
 import { superValidate } from 'sveltekit-superforms';

@@ -1,19 +1,14 @@
-import { insertUserSchema } from '$lib/api/users/users.schema.js';
+import { insertUserAndImageSchema } from '$lib/api/features/users/users.schema.js';
 import { redirect, setFlash } from 'sveltekit-flash-message/server';
-// import { layoutStore } from '$lib/stores/layout.store.js';
 import type { PageServerLoad } from './$types.js';
-import { superValidate } from 'sveltekit-superforms';
+import { superValidate, withFiles } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { parseApiResponse } from '$lib/utils/index.js';
 import { VITE_VERCEL_URL } from '$env/static/private';
+import { parseApiResponse } from '$lib/utils/index.js';
 
 export const load: PageServerLoad = async () => {
-	// layoutStore.increment({
-	// 	isSearch: false,
-	// 	title: 'New Users'
-	// });
 	return {
-		form: await superValidate(zod(insertUserSchema))
+		form: await superValidate(zod(insertUserAndImageSchema))
 	};
 };
 
@@ -21,20 +16,36 @@ export const actions = {
 	default: async (event) => {
 		const { locals, cookies } = event;
 
-		const form = await superValidate(event, zod(insertUserSchema));
+		const form = await superValidate(event, zod(insertUserAndImageSchema));
+		let imageUrl: string | undefined;
+
+		if (form.data.imageFile) {
+			const reader = new FileReader();
+			reader.readAsDataURL(form.data.imageFile);
+
+			reader.onload = function () {
+				//me.modelvalue = reader.result;
+				console.log(reader.result);
+				imageUrl = reader.result?.toString();
+			};
+			reader.onerror = function (error) {
+				console.log('Error: ', error);
+			};
+		}
 
 		const createUser = await parseApiResponse(
 			locals.api.users.$post({
-				json: form.data
+				json: {
+					...form.data,
+					imageUrl
+				}
 			})
 		);
 
 		if (createUser.error) {
 			const { message } = createUser;
 			setFlash({ type: 'error', message }, cookies);
-			return {
-				form
-			};
+			return withFiles({ form });
 		}
 
 		const { data } = createUser;

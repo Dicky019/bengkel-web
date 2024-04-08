@@ -6,13 +6,15 @@ import type {
 	pacthUserSchema,
 	updateUserSchema,
 	usersQuerySchema,
-	userIdsSchema
+	userIdsSchema,
+	insertUserAndImageSchema
 } from './users.schema';
-import type { ClientType } from '..';
+import type { ClientType } from '../..';
 
 // Types for Users - used to type API request params and within Components
 export type User = typeof userTable.$inferSelect;
 export type UserRole = User['role'];
+export type NewUserAndImageSchema = z.infer<typeof insertUserAndImageSchema>;
 export type NewUserSchema = z.infer<typeof insertUserSchema>;
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 export type PacthUserSchema = z.infer<typeof pacthUserSchema>;

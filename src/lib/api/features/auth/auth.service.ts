@@ -1,6 +1,6 @@
 import type { User } from 'lucia';
-import { HttpStatus } from '../helpers/enum';
-import { throwErrorResponse } from '../helpers/response';
+import { HttpStatus } from '../../helpers/enum';
+import { throwErrorResponse } from '../../helpers/response';
 import * as authRepo from './auth.repository';
 import type { GetGoogleUser } from './auth.type';
 

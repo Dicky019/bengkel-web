@@ -8,8 +8,8 @@ import validatorSchemaMiddleware from '$api/middlewares/validator';
 
 import * as authService from './auth.service';
 import { authGoogleUserSchema, authGoogleAdminSchema } from './auth.schema';
-import type { MiddlewareVariables } from '../helpers/types';
-import { authMiddleware } from '../middlewares/auth';
+import type { MiddlewareVariables } from '../../helpers/types';
+import { authMiddleware } from '../../middlewares/auth';
 
 const authRouter = new Hono<{
 	Variables: MiddlewareVariables;
@@ -24,8 +24,6 @@ const authRouter = new Hono<{
 	})
 	.post('/google-admin', validatorSchemaMiddleware('json', authGoogleAdminSchema), async (c) => {
 		const { accessToken } = c.req.valid('json');
-
-		console.log({ accessToken });
 
 		const user = await authService.googleAdmin({ accessToken });
 

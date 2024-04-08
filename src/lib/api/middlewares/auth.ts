@@ -7,7 +7,7 @@ import { getCookie, setCookie } from 'hono/cookie';
 import type { Context } from 'hono';
 import { convertCookie } from '../helpers';
 import type { MiddlewareVariables } from '../helpers/types';
-import type { UserRole } from '../users/users.type';
+import type { UserRole } from '../features/users/users.type';
 
 export const authMiddlewareLucia = createMiddleware(async (c, next) => {
 	const authorizationHeader = c.req.header('Authorization');

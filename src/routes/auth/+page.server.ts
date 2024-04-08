@@ -1,5 +1,5 @@
-import { authGoogleAdminSchema } from '$lib/api/auth/auth.schema.js';
-import { getUserInfo, parseApiResponse } from '$lib/utils/index.js';
+import { authGoogleAdminSchema } from '$lib/api/features/auth/auth.schema.js';
+import { parseApiResponse } from '$lib/utils/index.js';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { redirect, setFlash } from 'sveltekit-flash-message/server';
@@ -30,7 +30,6 @@ export const actions = {
 		const accessToken = cookies.get('google_access_token');
 
 		if (!accessToken) {
-			console.log({ accessToken });
 			return {
 				form
 			};

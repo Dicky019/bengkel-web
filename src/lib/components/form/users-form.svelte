@@ -1,27 +1,28 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
-	import { type SuperValidated, superForm } from 'sveltekit-superforms';
+	import { type SuperValidated, superForm, fileProxy } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { insertUserSchema } from '$lib/api/users/users.schema';
-	import type { NewUserSchema } from '$lib/api/users/users.type';
+	import { insertUserAndImageSchema } from '$lib/api/features/users/users.schema';
+	import type { NewUserAndImageSchema } from '$lib/api/features/users/users.type';
 	import * as Select from '../ui/select';
+	import { files } from '$service-worker';
 	// import { faker } from '@faker-js/faker';
 
 	const { formUser, data } = $props<{
-		formUser: SuperValidated<NewUserSchema>;
+		formUser: SuperValidated<NewUserAndImageSchema>;
 		data?: {
 			id: string;
-			imageUrl: string;
 			firstName: string;
 			lastName: string;
 			role: 'admin' | 'motir' | 'pengendara';
 			email: string;
+			imageFile: File;
 		};
 	}>();
 
 	const form = superForm(formUser, {
-		validators: zodClient(insertUserSchema)
+		validators: zodClient(insertUserAndImageSchema)
 	});
 
 	const { form: formData, enhance } = form;
@@ -45,11 +46,16 @@
 			formData.set(data);
 		}
 	});
+
+	const file = fileProxy(form, 'imageFile');
+
+	// let image = $state(
+	// 	$images
+	// );
 </script>
 
 <!-- <FormLayout title="Users"> -->
-<form class="mx-4" method="POST" use:enhance>
-	<input hidden bind:value={$formData.imageUrl} name="imageUrl" />
+<form class="mx-4" enctype="multipart/form-data" method="POST" use:enhance>
 	<div class="flex gap-2">
 		<Form.Field class="flex-1" {form} name="firstName">
 			<Form.Control let:attrs>
@@ -100,13 +106,19 @@
 		</Form.Field>
 	</div>
 
-	<!-- <Form.Field {form} name="imageUrl">
+	<Form.Field {form} name="imageFile">
 		<Form.Control let:attrs>
 			<Form.Label>Image</Form.Label>
-			<Input {...attrs} type="file" bind:value={$formData.imageUrl} />
+			<input
+				class="'flex disabled:opacity-50' h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed"
+				{...attrs}
+				type="file"
+				bind:files={$file}
+				accept="image/png, image/jpeg"
+			/>
 		</Form.Control>
 		<Form.FieldErrors />
-	</Form.Field> -->
+	</Form.Field>
 
 	<Form.Button class="mx-auto my-5" type="submit">Submit</Form.Button>
 </form>

@@ -6,10 +6,10 @@ import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { HTTPException } from 'hono/http-exception';
-import { ensureLoggedIn } from '../middlewares/auth';
-import type { MiddlewareVariables } from '../helpers/types';
-import { successResponse } from '../helpers/response';
-import validatorSchemaMiddleware from '../middlewares/validator';
+import { ensureLoggedIn } from '../../middlewares/auth';
+import type { MiddlewareVariables } from '../../helpers/types';
+import { successResponse } from '../../helpers/response';
+import validatorSchemaMiddleware from '../../middlewares/validator';
 
 const users = new Hono<{
 	Variables: MiddlewareVariables;

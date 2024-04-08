@@ -1,7 +1,7 @@
 import { db } from '$lib/db';
 import { userTable } from '$lib/db/schemas/auth';
 import { asc, eq, like } from 'drizzle-orm';
-import { withPagination } from '../helpers';
+import { withPagination } from '../../helpers';
 import type { NewUserSchema, UpdateUserSchema, UserId, UserIds, UsersQuery } from './users.type';
 
 export async function getUsers({ page, pageSize, email }: UsersQuery) {
@@ -51,28 +51,13 @@ export async function deleteUser(props: UserId) {
 }
 
 export async function deleteMultyUser(props: UserIds) {
-	try {
-		console.log(props);
+	const users = await Promise.all(props.map((user) => deleteUser(user.id)));
 
-		// for (const data in ) {
-		// 	await db.delete(userTable).where(eq(userTable.id, data));
-		// }
-
-		await Promise.all(props.map((user) => db.delete(userTable).where(eq(userTable.id, user.id))));
-	} catch (error) {
-		console.log({ error });
-	}
-
-	return props;
+	return users;
 }
 
-// export async function getUserByEmail(searchEmail: string) {
-// 	const usersQuery = await db.query.userTable.findMany({
-// 		where(fields, operators) {
-// 			return operators.like(fields.email, searchEmail);
-// 		}
-// 	});
-// 	return {
-// 		data: usersQuery
-// 	};
-// }
+export async function getMultyUser(props: UserIds) {
+	const users = await Promise.all(props.map((user) => getUser({ id: user.id })));
+
+	return users;
+}

@@ -2,7 +2,7 @@ import { parseApiResponse, wait } from '$lib/utils/index';
 import { error } from '@sveltejs/kit';
 import { setFlash } from 'sveltekit-flash-message/server';
 import type { PageServerLoad, Actions } from './$types';
-import type { User } from '$lib/api/users/users.type';
+import type { User } from '$lib/api/features/users/users.type';
 
 // export const prerender = false;
 

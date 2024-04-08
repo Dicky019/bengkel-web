@@ -3,10 +3,10 @@ import { hc } from 'hono/client';
 
 import { authMiddlewareLucia } from './middlewares/auth';
 
-import users from './users/users.controller';
-import pengendara from './pengendara/pengendara.controller';
-import todos from './todos';
-import authRouter from './auth/auth.controller';
+import users from './features/users/users.controller';
+import pengendara from './features/pengendara/pengendara.controller';
+import todos from './features/todos';
+import authRouter from './features/auth/auth.controller';
 import type { MiddlewareVariables } from './helpers/types';
 
 /* -------------------------------------------------------------------------- */

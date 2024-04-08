@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import type { THttpStatusErrorValue, THttpStatusSuccessValue } from '$lib/api/helpers';
+import type { THttpStatusErrorValue } from '$lib/api/helpers';
 import { error } from '@sveltejs/kit';
 import type { ClientResponse } from 'hono/client';
 
@@ -22,6 +22,9 @@ const DIVISIONS = [
 const formatter = new Intl.RelativeTimeFormat(undefined, {
 	numeric: 'auto'
 });
+
+export const MAX_FILE_SIZE = 2 * 1024 * 1024;
+export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
 export function formatTimeAgo(date: Date) {
 	let duration = (date.getTime() - new Date().getTime()) / 1000;
@@ -49,7 +52,7 @@ const parseApiError = (response: unknown) => {
 };
 
 export const getUserInfo = async (locals: App.Locals) => {
-	const me = await parseApiResponse(locals.api.users.me.$get());
+	const me = await parseApiResponse(locals.api.auth.me.$get());
 
 	if (me.error) {
 		const { code, message } = me;
