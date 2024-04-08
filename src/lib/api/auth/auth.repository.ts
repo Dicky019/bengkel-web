@@ -55,6 +55,8 @@ export const getUserByRole = async ({
 			}
 		});
 
+		console.log(user);
+
 		return user
 			? {
 					user,

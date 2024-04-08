@@ -13,8 +13,8 @@ export const todoTable = pgTable('todo', {
 		.defaultNow(),
 	completed: boolean('completed').notNull().default(false),
 	userId: text('user_id')
-		.notNull()
 		.references(() => userTable.id)
+		.notNull()
 });
 
 export const todoRelations = relations(todoTable, ({ one }) => ({

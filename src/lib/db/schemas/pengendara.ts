@@ -1,13 +1,17 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, varchar, uuid, timestamp, text } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, timestamp, text } from 'drizzle-orm/pg-core';
 import { userTable } from './auth';
+import { generateId } from 'lucia';
 
 export const pengendaraTable = pgTable('pengendara', {
-	id: uuid('id').primaryKey().defaultRandom(),
+	id: text('id')
+		.primaryKey()
+		.$default(() => generateId(40)),
 	noTelephone: varchar('no_telephone').notNull(),
 	userId: text('user_id')
 		.notNull()
-		.references(() => userTable.id),
+		.references(() => userTable.id)
+		.unique(),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow()
 });

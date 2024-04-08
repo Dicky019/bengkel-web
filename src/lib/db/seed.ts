@@ -2,10 +2,9 @@ import { userTable } from './schemas/auth';
 import { faker } from '@faker-js/faker';
 import * as dotenv from 'dotenv';
 import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/vercel-postgres';
+import { sql } from '@vercel/postgres';
 
-import { neon } from '@neondatabase/serverless';
-import type { NeonQueryFunction } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
 dotenv.config({ path: './.env' });
 
 if (!('DATABASE_URL' in process.env)) throw new Error('DATABASE_URL not found on .env');
@@ -20,8 +19,6 @@ enum Provider {
 }
 
 const main = async () => {
-	const sql: NeonQueryFunction<boolean, boolean> = neon(process.env.DATABASE_URL!);
-
 	const db = drizzle(sql);
 
 	const data: (typeof userTable.$inferInsert)[] = [];

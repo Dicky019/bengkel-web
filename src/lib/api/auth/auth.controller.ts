@@ -25,6 +25,8 @@ const authRouter = new Hono<{
 	.post('/google-admin', validatorSchemaMiddleware('json', authGoogleAdminSchema), async (c) => {
 		const { accessToken } = c.req.valid('json');
 
+		console.log({ accessToken });
+
 		const user = await authService.googleAdmin({ accessToken });
 
 		const cookie = await createSessionCookieLucia(user.id);

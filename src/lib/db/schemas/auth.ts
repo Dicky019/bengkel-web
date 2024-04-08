@@ -1,14 +1,5 @@
 import { relations } from 'drizzle-orm/relations';
-import {
-	pgEnum,
-	pgTable,
-	varchar,
-	timestamp,
-	uuid,
-	unique,
-	index,
-	text
-} from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, varchar, timestamp, index, text } from 'drizzle-orm/pg-core';
 import { generateId } from 'lucia';
 import { pengendaraTable } from './pengendara';
 
@@ -61,5 +52,8 @@ export const sessionRelations = relations(sessionTable, ({ one }) => ({
 
 export const userRelations = relations(userTable, ({ many, one }) => ({
 	sessions: many(sessionTable),
-	pengendara: one(pengendaraTable)
+	pengendara: one(pengendaraTable, {
+		fields: [userTable.id],
+		references: [pengendaraTable.userId]
+	})
 }));

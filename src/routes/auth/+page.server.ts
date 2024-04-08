@@ -30,6 +30,7 @@ export const actions = {
 		const accessToken = cookies.get('google_access_token');
 
 		if (!accessToken) {
+			console.log({ accessToken });
 			return {
 				form
 			};
@@ -55,7 +56,7 @@ export const actions = {
 
 		const { data } = googleLogin;
 
-		await wait(2000);
+		// await wait(2000);
 
 		return redirect(VITE_VERCEL_URL, { type: 'success', message: data.email }, cookies);
 	},
