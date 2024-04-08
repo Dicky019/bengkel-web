@@ -16,12 +16,6 @@ export const load = async ({ locals, cookies }) => {
 	};
 };
 
-function wait(milliseconds: number) {
-	return new Promise((resolve) => {
-		setTimeout(resolve, milliseconds);
-	});
-}
-
 export const actions = {
 	google: async (event) => {
 		const { locals, cookies } = event;
@@ -29,6 +23,7 @@ export const actions = {
 		const form = await superValidate(event, zod(authGoogleAdminSchema));
 		const accessToken = cookies.get('google_access_token');
 
+		console.log({ accessToken });
 		if (!accessToken) {
 			return {
 				form
@@ -56,6 +51,8 @@ export const actions = {
 		const { data } = googleLogin;
 
 		// await wait(2000);
+
+		console.log({ data });
 
 		return redirect(VITE_VERCEL_URL, { type: 'success', message: data.email }, cookies);
 	},

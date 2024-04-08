@@ -1,5 +1,5 @@
 <script lang="ts">
-	import UsersForm from '$components/form/users-form.svelte';
+	import UsersForm from '$lib/components/form/users-form.svelte';
 
 	const { data } = $props();
 </script>
