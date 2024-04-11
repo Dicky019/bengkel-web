@@ -3,42 +3,35 @@
 	import { Input } from '$lib/components/ui/input';
 	import { type SuperValidated, superForm, fileProxy } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { insertUserAndImageSchema } from '$lib/api/features/users/users.schema';
-	import type { NewUserAndImageSchema } from '$lib/api/features/users/users.type';
+	import { userSchema } from '$lib/api/features/users/users.schema';
 	import * as Select from '../ui/select';
-	import { files } from '$service-worker';
-	// import { faker } from '@faker-js/faker';
+	import Icons from '../icons';
+	import type { z } from 'zod';
 
 	const { formUser, data } = $props<{
-		formUser: SuperValidated<NewUserAndImageSchema>;
-		data?: {
-			id: string;
-			firstName: string;
-			lastName: string;
-			role: 'admin' | 'motir' | 'pengendara';
-			email: string;
-			imageFile: File;
-		};
+		formUser: SuperValidated<z.infer<typeof userSchema>>;
+		data?: z.infer<typeof userSchema>;
 	}>();
 
 	const form = superForm(formUser, {
-		validators: zodClient(insertUserAndImageSchema)
+		validators: zodClient(userSchema)
 	});
 
-	const { form: formData, enhance } = form;
+	const { form: formData, enhance, submitting } = form;
 
 	const getSelection = (str: string) => {
 		return str.charAt(0).toUpperCase() + str.slice(1);
 	};
 	let selectedEmail = $state(
-		$formData.role
+		data?.role
 			? {
-					label: getSelection($formData.role),
-					value: $formData.role
+					label: getSelection(data?.role),
+					value: data?.role
 				}
 			: undefined
 	);
 
+	console.log(selectedEmail);
 	$effect(() => {
 		if (!data) {
 			// $formData.imageUrl = faker.image.avatarGitHub();
@@ -47,11 +40,7 @@
 		}
 	});
 
-	const file = fileProxy(form, 'imageFile');
-
-	// let image = $state(
-	// 	$images
-	// );
+	const file = fileProxy(form, 'image');
 </script>
 
 <!-- <FormLayout title="Users"> -->
@@ -60,14 +49,24 @@
 		<Form.Field class="flex-1" {form} name="firstName">
 			<Form.Control let:attrs>
 				<Form.Label>First Name</Form.Label>
-				<Input {...attrs} placeholder="example" bind:value={$formData.firstName} />
+				<Input
+					disabled={$submitting}
+					{...attrs}
+					placeholder="example"
+					bind:value={$formData.firstName}
+				/>
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
 		<Form.Field class="flex-1" {form} name="lastName">
 			<Form.Control let:attrs>
 				<Form.Label>Last Name</Form.Label>
-				<Input {...attrs} placeholder="examples" bind:value={$formData.lastName} />
+				<Input
+					disabled={$submitting}
+					{...attrs}
+					placeholder="examples"
+					bind:value={$formData.lastName}
+				/>
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
@@ -76,7 +75,12 @@
 		<Form.Field class="flex-1" {form} name="email">
 			<Form.Control let:attrs>
 				<Form.Label>Email</Form.Label>
-				<Input {...attrs} placeholder="m@example.com" bind:value={$formData.email} />
+				<Input
+					disabled={$submitting}
+					{...attrs}
+					placeholder="m@example.com"
+					bind:value={$formData.email}
+				/>
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
@@ -85,6 +89,7 @@
 			<Form.Control let:attrs>
 				<Form.Label>Role</Form.Label>
 				<Select.Root
+					disabled={$submitting}
 					selected={selectedEmail}
 					onSelectedChange={(v) => {
 						v && ($formData.role = v.value);
@@ -106,10 +111,11 @@
 		</Form.Field>
 	</div>
 
-	<Form.Field {form} name="imageFile">
+	<Form.Field {form} name="image">
 		<Form.Control let:attrs>
 			<Form.Label>Image</Form.Label>
 			<input
+				disabled={$submitting}
 				class="'flex disabled:opacity-50' h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed"
 				{...attrs}
 				type="file"
@@ -120,6 +126,10 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<Form.Button class="mx-auto my-5" type="submit">Submit</Form.Button>
+	<Form.Button disabled={$submitting} class="mx-auto my-5" type="submit">
+		{#if $submitting}
+			<Icons.spinner class="mr-2 h-4 w-4 animate-spin" />
+		{/if}
+		Submit
+	</Form.Button>
 </form>
-<!-- </FormLayout> -->

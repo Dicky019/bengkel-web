@@ -3,14 +3,9 @@ import * as usersRepo from './users.repository';
 import type { UserId } from 'lucia';
 import { throwErrorResponse } from '../../helpers/response';
 import { HttpStatusError } from '../../helpers/enum';
-import { deleteImage, uploadImage } from '$lib/images/cloudinary';
+import { deleteImage, deleteImages } from '$lib/images/cloudinary';
 
 export function getUsers(usersQuery: UsersQuery) {
-	// if (usersQuery.email) {
-	// 	const searchEmail = '%' + usersQuery.email + '%';
-	// 	return usersRepo.getUserByEmail(searchEmail);
-	// }
-
 	return usersRepo.getUsers(usersQuery);
 }
 
@@ -31,15 +26,15 @@ export async function createUser(props: NewUserSchema) {
 		throw throwErrorResponse(HttpStatusError.CONFLICT, 'User Sudah Ada');
 	}
 
-	let imageUrl: string | undefined = undefined;
-	if (props.imageUrl) {
-		imageUrl = await uploadImage(props.imageUrl, {
-			public_id: props.email + '/' + `${props.firstName} ${props.lastName}`,
-			folder: 'Users'
-		});
-	}
+	const imageUrl = props.imageUrl;
 
-	return usersRepo.createUser(props);
+	return usersRepo.createUser({
+		email: props.email,
+		role: props.role,
+		firstName: props.firstName,
+		lastName: props.lastName,
+		imageUrl: imageUrl === 'undefined' || imageUrl === 'null' ? null : imageUrl
+	});
 }
 
 export async function updateUser(props: UpdateUserSchema) {
@@ -49,17 +44,16 @@ export async function updateUser(props: UpdateUserSchema) {
 		throw throwErrorResponse(HttpStatusError.NOT_FOUND, 'User Not Found');
 	}
 
-	let imageUrl: string | undefined = undefined;
-	if (props.imageUrl) {
-		imageUrl = await uploadImage(props.imageUrl, {
-			public_id: props.email + '/' + `${props.firstName} ${props.lastName}`,
-			folder: 'Users'
-		});
-	}
+	const imageUrl = props.imageUrl;
 
-	console.log({ user });
-
-	return usersRepo.updateUser(props);
+	return usersRepo.updateUser({
+		email: props.email,
+		role: props.role,
+		firstName: props.firstName,
+		lastName: props.lastName,
+		imageUrl: imageUrl === 'undefined' || imageUrl === 'null' ? user.imageUrl : props.imageUrl,
+		id: props.id
+	});
 }
 
 export async function deleteUser(props: UserId) {
@@ -71,7 +65,7 @@ export async function deleteUser(props: UserId) {
 		}
 
 		if (user.imageUrl) {
-			await deleteImage(`Users/${user.email}/${user.firstName} ${user.lastName}`);
+			await deleteImage(`users/${user.email}`);
 		}
 
 		return usersRepo.deleteUser(user.id);
@@ -82,21 +76,22 @@ export async function deleteUser(props: UserId) {
 
 export async function deleteMultyUser(props: UserIds) {
 	try {
-		const users = await usersRepo.getMultyUser(props);
+		const users = await usersRepo.getUsersId(props);
 
 		const result = users.filter((user) => user) as User[];
-		const resultImage = result.filter((user) => user.imageUrl !== null) as User[];
+
+		const resultImage = result
+			.filter((user) => user.imageUrl !== null)
+			.map((user) => `users/${user.email}`);
+
+		console.log({ result, resultImage });
 
 		if (result.length === 0) {
 			throw throwErrorResponse(HttpStatusError.NOT_FOUND, 'Users Tidak Ada');
 		}
 
-		if (resultImage.length === 0) {
-			await Promise.all(
-				resultImage.map((user) =>
-					deleteImage(`Users/${user.email}/${user.firstName} ${user.lastName}`)
-				)
-			);
+		if (resultImage.length !== 0) {
+			deleteImages(resultImage);
 		}
 
 		return usersRepo.deleteMultyUser(result);

@@ -31,10 +31,13 @@ const getUser = async (props: LoginSchema & { imageUrl?: string }) => {
 	// console.log({ providerId: props.providerId, imageUrl: props.imageUrl, user });
 
 	if (user) {
-		await db.update(userTable).set({
-			providerId: props.providerId,
-			imageUrl: props.imageUrl
-		});
+		await db
+			.update(userTable)
+			.set({
+				providerId: props.providerId,
+				imageUrl: props.imageUrl
+			})
+			.where(eq(userTable.email, props.email));
 	}
 
 	return user;

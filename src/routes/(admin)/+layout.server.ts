@@ -7,7 +7,7 @@ export const load = async (event) => {
 	const resUser = await parseApiResponse(event.locals.api.auth.me.$get());
 
 	if (resUser.error) {
-		return redirect(301, '/login');
+		return redirect(301, '/auth');
 	}
 
 	const { user } = resUser.data;
@@ -32,6 +32,11 @@ export const load = async (event) => {
 	const isNew = isNotMain && listTitle[1] === 'New';
 	const isEdit = isNotMain && listTitle[2] === 'Edit';
 
+	if (isNotMain) {
+		isSearch = false;
+		title = 'View ' + listTitle[0];
+	}
+
 	if (isNew) {
 		isSearch = false;
 		title = listTitle.reverse().join(' ');
@@ -44,14 +49,6 @@ export const load = async (event) => {
 
 	layoutCookie && (layout = JSON.parse(layoutCookie));
 	collapsedCookie && (collapsed = JSON.parse(collapsedCookie));
-
-	// console.log({ title, isSearch });
-
-	// layoutStore.increment({
-	// 	isSearch,
-	// 	title
-	// });
-	// event.
 
 	return {
 		layout: layout ?? [265, 440, 655],

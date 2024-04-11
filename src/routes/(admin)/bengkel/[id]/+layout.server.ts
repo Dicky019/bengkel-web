@@ -2,7 +2,7 @@ import { VITE_VERCEL_URL } from '$env/static/private';
 import { parseApiResponse } from '$lib/utils/index';
 import { redirect } from 'sveltekit-flash-message/server';
 
-export const load = async ({ locals, cookies, params, url }) => {
+export const load = async ({ locals, cookies, params }) => {
 	const userRes = await parseApiResponse(
 		locals.api.users[':id'].$get({
 			param: params
@@ -21,5 +21,9 @@ export const load = async ({ locals, cookies, params, url }) => {
 
 	return {
 		user: data
+		// adminData: {
+		// 	title: `Users ${data.firstName} ${data.lastName}`,
+		// 	isSearch: false
+		// }
 	};
 };

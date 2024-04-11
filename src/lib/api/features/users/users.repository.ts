@@ -1,8 +1,12 @@
 import { db } from '$lib/db';
 import { userTable } from '$lib/db/schemas/auth';
-import { asc, eq, like } from 'drizzle-orm';
+import { arrayContained, asc, eq, inArray, like } from 'drizzle-orm';
 import { withPagination } from '../../helpers';
 import type { NewUserSchema, UpdateUserSchema, UserId, UserIds, UsersQuery } from './users.type';
+import { isUploadFile, uploadImage } from '$lib/images/cloudinary';
+import { throwErrorResponse } from '$lib/api/helpers/response';
+import { HttpStatusError } from '$lib/api/helpers/enum';
+import { pengendaraTable } from '$lib/db/schemas/pengendara';
 
 export async function getUsers({ page, pageSize, email }: UsersQuery) {
 	const searchEmail = '%' + email + '%';
@@ -17,7 +21,15 @@ export async function getUsers({ page, pageSize, email }: UsersQuery) {
 	return usersPagination;
 }
 
-export async function getUser({ id, email }: { email?: string; id?: string }) {
+export async function getUser({
+	id,
+	email,
+	isPengendara
+}: {
+	email?: string;
+	id?: string;
+	isPengendara?: true;
+}) {
 	const usersQuery = await db.query.userTable.findFirst({
 		where(fields, operators) {
 			if (id) {
@@ -26,17 +38,42 @@ export async function getUser({ id, email }: { email?: string; id?: string }) {
 			if (email) {
 				return operators.eq(fields.email, email);
 			}
+		},
+		with: {
+			pengendara: isPengendara
 		}
 	});
+
+	if (usersQuery) {
+		const { pengendara, ...user } = usersQuery;
+		return {
+			...user,
+			noTelephone: pengendara?.noTelephone ?? '-'
+		};
+	}
+
 	return usersQuery;
 }
 
-export async function createUser(props: NewUserSchema) {
+export async function createUser(props: {
+	email: string;
+	role: 'admin' | 'motir' | 'pengendara';
+	firstName: string;
+	lastName: string;
+	imageUrl?: string | null | undefined;
+}) {
 	const [newUser] = await db.insert(userTable).values(props).returning();
 	return newUser;
 }
 
-export async function updateUser(props: UpdateUserSchema) {
+export async function updateUser(props: {
+	id: string;
+	email: string;
+	role: 'admin' | 'motir' | 'pengendara';
+	firstName: string;
+	lastName: string;
+	imageUrl?: string | null | undefined;
+}) {
 	const [newUser] = await db
 		.update(userTable)
 		.set(props)
@@ -56,8 +93,29 @@ export async function deleteMultyUser(props: UserIds) {
 	return users;
 }
 
-export async function getMultyUser(props: UserIds) {
-	const users = await Promise.all(props.map((user) => getUser({ id: user.id })));
+export async function getUsersId(props: UserIds) {
+	const users = await db
+		.select()
+		.from(userTable)
+		.where(
+			inArray(
+				userTable.id,
+				props.map((user) => user.id)
+			)
+		);
 
 	return users;
+}
+
+export async function uploadImageUser({ image, email }: { image: File; email: string }) {
+	const imageUploadResult = await uploadImage(image, {
+		public_id: email,
+		folder: 'users'
+	});
+
+	if (!isUploadFile(imageUploadResult)) {
+		throw throwErrorResponse(HttpStatusError.BAD_REQUEST, imageUploadResult.error.message);
+	}
+
+	return imageUploadResult.url;
 }

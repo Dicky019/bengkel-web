@@ -37,9 +37,9 @@ const users = new Hono<{
 	.post(
 		'/',
 		authMiddleware(['admin']),
-		validatorSchemaMiddleware('json', insertUserSchema),
+		validatorSchemaMiddleware('form', insertUserSchema),
 		async (c) => {
-			const userJson = c.req.valid('json');
+			const userJson = c.req.valid('form');
 			const user = await userService.createUser(userJson);
 			return successResponse(c, { data: user });
 		}
@@ -47,9 +47,9 @@ const users = new Hono<{
 	.put(
 		'/',
 		// authMiddleware(['admin']),
-		validatorSchemaMiddleware('json', updateUserSchema),
+		validatorSchemaMiddleware('form', updateUserSchema),
 		async (c) => {
-			const userJson = c.req.valid('json');
+			const userJson = c.req.valid('form');
 			const user = await userService.updateUser(userJson);
 			return successResponse(c, { data: user });
 		}

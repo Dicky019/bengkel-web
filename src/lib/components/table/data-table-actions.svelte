@@ -20,20 +20,20 @@
 	<DropdownMenu.Content>
 		<DropdownMenu.Group>
 			<DropdownMenu.Label>Actions</DropdownMenu.Label>
-			<!-- <DropdownMenu.Item>
-				<a href={`${title}/${id}/edit`}>Edit</a>
-			</DropdownMenu.Item> -->
+
 			<DropdownMenu.Separator />
-			<DropdownMenu.Item class="cursor-pointer" href={`${title}/${id}/edit`}>Edit</DropdownMenu.Item
-			>
+			<DropdownMenu.Item class="cursor-pointer" href={`${title}/${id}/edit`}>
+				Edit
+			</DropdownMenu.Item>
 			<DropdownMenu.Item>
 				<form method="post" action={title + '?/delete'}>
 					<input hidden value={id} name="id" />
 					<button type="submit">Delete</button>
 				</form>
 			</DropdownMenu.Item>
-		</DropdownMenu.Group>
 
-		<!-- <DropdownMenu.Item class="cursor-pointer" href={`${title}/${id}`}>View</DropdownMenu.Item> -->
+			<DropdownMenu.Separator />
+			<DropdownMenu.Item class="cursor-pointer" href={`${title}/${id}`}>View</DropdownMenu.Item>
+		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
