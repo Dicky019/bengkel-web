@@ -17,15 +17,15 @@ export const primaryRoutes: Route[] = [
 		href: '/users'
 	},
 	{
-		title: 'Pemesanan',
-		icon: Icons.clipboard,
-		// variant: 'ghost',
-		href: '/pemesanan'
-	},
-	{
 		title: 'Bengkel',
 		icon: Icons.workshop,
 		// variant: 'ghost',
 		href: '/bengkel'
+	},
+	{
+		title: 'Pemesanan',
+		icon: Icons.clipboard,
+		// variant: 'ghost',
+		href: '/pemesanan'
 	}
 ];

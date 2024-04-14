@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import type { THttpStatusErrorValue } from '$lib/api/helpers';
+import type { THttpStatusErrorValue } from '$api/helpers';
 import { error } from '@sveltejs/kit';
 import type { ClientResponse } from 'hono/client';
 

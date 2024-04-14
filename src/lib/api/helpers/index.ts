@@ -70,8 +70,6 @@ export async function withPagination<T extends PgTable>({
 
 	const data = whereColumn ? await queryDb.where(whereColumn(table)) : await queryDb;
 
-	// console.log({ total, data: data.length });
-
 	const lastPage = Math.ceil(total / pageSize);
 	const prev = page > 1 ? page - 1 : null;
 	const next = page < lastPage ? page + 1 : null;

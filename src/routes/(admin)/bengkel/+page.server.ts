@@ -1,8 +1,6 @@
-import { parseApiResponse, wait } from '$lib/utils/index';
-import { error } from '@sveltejs/kit';
+import { parseApiResponse } from '$lib/utils/index';
 import { setFlash } from 'sveltekit-flash-message/server';
-import type { PageServerLoad, Actions } from './$types';
-import type { User } from '$lib/api/features/users/users.type';
+import type { User } from '$api/features/users/users.type';
 
 // export const prerender = false;
 
@@ -11,27 +9,27 @@ export const load = async ({ url, locals }) => {
 	const perPageString = url.searchParams.get('per-page');
 	const search = url.searchParams.get('search');
 
-	const users = await parseApiResponse(
-		locals.api.users.$get({
+	const bengkel = await parseApiResponse(
+		locals.api.bengkels.$get({
 			query: {
-				email: search ?? undefined,
+				name: search ?? undefined,
 				page: pageString ?? undefined,
 				pageSize: perPageString ?? undefined
 			}
 		})
 	);
 
-	// console.log(users);
+	// console.log(bengkel);
 
 	// You need to use the SvelteKit fetch function here
-	const page = parseInt(pageString ?? '1');
-	const perPage = parseInt(perPageString ?? '8');
+	const isEmptySearchParams = pageString === null && perPageString === null && search === null;
+	const isEmptyData = !bengkel.error && bengkel.data.length === 0 && isEmptySearchParams;
 
 	return {
-		page,
-		perPage,
 		search,
-		users: users
+		bengkel: bengkel,
+		isEmptyData,
+		isEmptySearchParams
 	};
 };
 

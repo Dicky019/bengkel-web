@@ -3,8 +3,8 @@ import type {
 	BengkelsQuery,
 	NewBengkelSchema,
 	UpdateBengkelSchema
-} from './bengkel.type';
-import * as bengkelRepo from './bengkel.repository';
+} from './bengkels.type';
+import * as bengkelRepo from './bengkels.repository';
 import { throwErrorResponse } from '../../helpers/response';
 import { HttpStatusError } from '../../helpers/enum';
 

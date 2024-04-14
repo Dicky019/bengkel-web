@@ -1,8 +1,6 @@
-import { parseApiResponse, wait } from '$lib/utils/index';
-import { error } from '@sveltejs/kit';
+import { parseApiResponse } from '$lib/utils/index';
 import { setFlash } from 'sveltekit-flash-message/server';
-import type { PageServerLoad, Actions } from './$types';
-import type { User } from '$lib/api/features/users/users.type';
+import type { User } from '$api/features/users/users.type';
 
 // export const prerender = false;
 
@@ -24,12 +22,12 @@ export const load = async ({ url, locals }) => {
 	// console.log(users);
 
 	// You need to use the SvelteKit fetch function here
-	const page = parseInt(pageString ?? '1');
-	const perPage = parseInt(perPageString ?? '8');
+	const isEmptySearchParams = pageString === null && perPageString === null && search === null;
+	const isEmptyData = !users.error && users.data.length === 0 && isEmptySearchParams;
 
 	return {
-		page,
-		perPage,
+		isEmptyData,
+		isEmptySearchParams,
 		search,
 		users: users
 	};

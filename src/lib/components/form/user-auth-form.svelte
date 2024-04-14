@@ -4,7 +4,7 @@
 	import { cn } from '$lib/utils';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { authGoogleAdminSchema } from '$lib/api/features/auth/auth.schema';
+	import { authGoogleAdminSchema } from '$api/features/auth/auth.schema';
 	import type { z } from 'zod';
 	import { goto } from '$app/navigation';
 

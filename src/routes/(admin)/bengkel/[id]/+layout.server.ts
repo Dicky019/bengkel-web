@@ -4,7 +4,7 @@ import { redirect } from 'sveltekit-flash-message/server';
 
 export const load = async ({ locals, cookies, params }) => {
 	const userRes = await parseApiResponse(
-		locals.api.users[':id'].$get({
+		locals.api.bengkel[':id'].$get({
 			param: params
 		})
 	);
@@ -20,7 +20,7 @@ export const load = async ({ locals, cookies, params }) => {
 	const { data } = userRes;
 
 	return {
-		user: data
+		bengkel: data
 		// adminData: {
 		// 	title: `Users ${data.firstName} ${data.lastName}`,
 		// 	isSearch: false

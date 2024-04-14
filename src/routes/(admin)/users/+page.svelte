@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { Success, Empty } from '$components/users';
+	import Users from '$lib/components/features/user/users.svelte';
+	import Empty from '$lib/components/state/empty.svelte';
+
 	const { data } = $props();
 </script>
 
 {#if data.users.error || data.users.data.length === 0}
-	<Empty message={'Users'} />
+	<Empty message={'User'} {...data} />
 {:else if data.users.data}
-	<Success users={data.users} title={data.title} />
+	<Users users={data.users} />
 {/if}

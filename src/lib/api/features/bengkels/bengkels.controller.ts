@@ -6,8 +6,13 @@ import validatorSchemaMiddleware from '../../middlewares/validator';
 
 import { authMiddleware } from '../../middlewares/auth';
 
-import * as bengkelService from './bengkel.service';
-import { bengkelsQuerySchema, setBengkelSchema } from './bengkel.schema';
+import * as bengkelService from './bengkels.service';
+import {
+	bengkelsQuerySchema,
+	insertBengkelSchema,
+	setBengkelSchema,
+	updateBengkelSchema
+} from './bengkels.schema';
 
 const bengkel = new Hono<{
 	Variables: MiddlewareVariables;
@@ -22,27 +27,33 @@ const bengkel = new Hono<{
 		const user = await bengkelService.getBengkel(c.req.param('id'));
 		return successResponse(c, { data: user });
 	})
-	.post('/', validatorSchemaMiddleware('json', setBengkelSchema), async (c) => {
+	.post('/', validatorSchemaMiddleware('json', insertBengkelSchema), async (c) => {
 		const updatePengendara = c.req.valid('json');
-		const bengkel = await bengkelService.setBengkel(updatePengendara);
+		const bengkel = await bengkelService.createBengkel(updatePengendara);
+
+		return successResponse(c, { data: bengkel });
+	})
+	.put('/', validatorSchemaMiddleware('json', updateBengkelSchema), async (c) => {
+		const updatePengendara = c.req.valid('json');
+		const bengkel = await bengkelService.updateBengkel(updatePengendara);
 
 		return successResponse(c, { data: bengkel });
 	})
 	.delete('/:id', authMiddleware(['admin']), async (c) => {
 		const bengkelId = c.req.param('id');
-		const bengkel = await bengkelService.deleteUser(bengkelId);
+		const bengkel = await bengkelService.deleteBengkel(bengkelId);
 		return successResponse(c, { data: bengkel });
-	})
-	.delete(
-		'/',
-		authMiddleware(['admin']),
-		validatorSchemaMiddleware('json', userIdsSchema),
-		async (c) => {
-			const userIdsJson = c.req.valid('json');
-			const user = await bengkelService.deleteMultyUser(userIdsJson.usersIds);
-			return successResponse(c, { data: user });
-		}
-	);
+	});
+// .delete(
+// 	'/',
+// 	authMiddleware(['admin']),
+// 	validatorSchemaMiddleware('json', userIdsSchema),
+// 	async (c) => {
+// 		const userIdsJson = c.req.valid('json');
+// 		const user = await bengkelService.de(userIdsJson.usersIds);
+// 		return successResponse(c, { data: user });
+// 	}
+// );
 
 export default bengkel;
 export type UsersType = typeof bengkel;

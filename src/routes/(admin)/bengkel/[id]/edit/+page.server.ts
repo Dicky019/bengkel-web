@@ -1,14 +1,14 @@
-import { insertUserSchema } from '$lib/api/features/users/users.schema.js';
 import { redirect, setFlash } from 'sveltekit-flash-message/server';
-import type { PageServerLoad } from './$types.js';
+import type { PageServerLoad } from './$types';
 import { superValidate, withFiles } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { parseApiResponse } from '$lib/utils/index.js';
+import { parseApiResponse } from '$lib/utils/index';
 import { VITE_VERCEL_URL } from '$env/static/private';
+import { insertBengkelSchema } from '$api/features/bengkels/bengkel.schema';
 
 export const load: PageServerLoad = async () => {
 	return {
-		form: await superValidate(zod(insertUserSchema))
+		form: await superValidate(zod(insertBengkelSchema))
 		// user: data
 	};
 };
@@ -17,21 +17,13 @@ export const actions = {
 	default: async (event) => {
 		const { locals, cookies } = event;
 
-		const form = await superValidate(event, zod(insertUserSchema));
+		const form = await superValidate(event, zod(insertBengkelSchema));
 
 		// console.log({ ...form.data, id: event.params.id });
 
 		const updateUser = await parseApiResponse(
-			locals.api.users.$put({
-				form: {
-					id: event.params.id,
-					email: form.data.email,
-					firstName: form.data.firstName,
-					lastName: form.data.lastName,
-					image: form.data.image,
-					role: form.data.role,
-					imageUrl: ''
-				}
+			locals.api.bengkel.$put({
+				json: { ...form.data, id: event.params.id, geoId: form.data.geoId ?? null }
 			})
 		);
 
@@ -43,10 +35,6 @@ export const actions = {
 
 		const { data } = updateUser;
 
-		return redirect(
-			VITE_VERCEL_URL + 'users',
-			{ type: 'success', message: data?.email ?? '' },
-			cookies
-		);
+		return redirect(VITE_VERCEL_URL + 'users', { type: 'success', message: data.name }, cookies);
 	}
 };

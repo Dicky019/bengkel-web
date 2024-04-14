@@ -1,4 +1,4 @@
-import app from '$lib/api';
+import app from '$api';
 import type { RequestHandler } from '@sveltejs/kit';
 import type { Config } from '@sveltejs/adapter-vercel';
 

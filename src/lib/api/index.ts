@@ -8,6 +8,7 @@ import pengendara from './features/pengendara/pengendara.controller';
 import todos from './features/todos';
 import authRouter from './features/auth/auth.controller';
 import type { MiddlewareVariables } from './helpers/types';
+import bengkels from './features/bengkels/bengkels.controller';
 
 /* -------------------------------------------------------------------------- */
 /*                                     App                                    */
@@ -25,6 +26,7 @@ app.use(authMiddlewareLucia);
 const routes = app
 	.route('/users', users)
 	.route('/pengendara', pengendara)
+	.route('/bengkels', bengkels)
 	.route('/todos', todos)
 	.route('/auth', authRouter)
 	.get('/', (c) => c.json({ message: 'server is healthy' }));

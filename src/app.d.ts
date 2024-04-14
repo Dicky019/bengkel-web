@@ -1,5 +1,5 @@
 // See https://kit.svelte.dev/docs/types#app
-import { ClientType } from '$lib/api';
+import { ClientType } from '$api';
 
 // for information about these interfaces
 declare global {

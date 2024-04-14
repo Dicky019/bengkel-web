@@ -1,10 +1,10 @@
 import { db } from '$lib/db';
 import type {
 	NewBengkelSchema,
-	BengkelId,
 	BengkelsQuery,
-	UpdateBengkelSchema
-} from './bengkel.type';
+	UpdateBengkelSchema,
+	BengkelId
+} from './bengkels.type';
 import { bengkelTable } from '$lib/db/schemas/bengkel';
 import { asc, eq, like } from 'drizzle-orm';
 import { withPagination } from '../../helpers';
@@ -31,6 +31,10 @@ export async function getBengkel({ name, id }: { name?: string; id?: string }) {
 			if (name) {
 				return operators.eq(fields.name, name);
 			}
+		},
+		with: {
+			geo: true,
+			user: true
 		}
 	});
 	return bengkelQuery;
@@ -51,14 +55,14 @@ export async function updateBengkel(props: UpdateBengkelSchema) {
 	return bengkel;
 }
 
-export async function deleteBengkel(props: UpdateBengkelSchema) {
-	const [bengkel] = await db.delete(bengkelTable).where(eq(bengkelTable.id, props.id)).returning();
+export async function deleteBengkel(props: BengkelId) {
+	const [bengkel] = await db.delete(bengkelTable).where(eq(bengkelTable.id, props)).returning();
 
 	return bengkel;
 }
 
-export async function deleteManyBengkel(props: UpdateBengkelSchema) {
-	const [bengkel] = await db.delete(bengkelTable).where(eq(bengkelTable.id, props.id)).returning();
+// export async function deleteManyBengkel(props: BengkelId[]) {
+// 	const [bengkel] = await db.delete(bengkelTable).where(eq(bengkelTable.id, props.id)).returning();
 
-	return bengkel;
-}
+// 	return bengkel;
+// }

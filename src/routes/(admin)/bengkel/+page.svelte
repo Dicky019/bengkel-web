@@ -1,10 +1,20 @@
 <script lang="ts">
-	import { Success, Empty } from '$components/users';
+	import Bengkels from '$lib/components/features/bengkel/bengkels.svelte';
+	import Empty from '$lib/components/state/empty.svelte';
+
 	const { data } = $props();
 </script>
 
-{#if data.users.error || data.users.data.length === 0}
-	<Empty message={'Users'} />
-{:else if data.users.data}
-	<Success users={data.users} title={data.title} />
+{#if data.bengkel.error}
+	<div>
+		Error {data.bengkel.message}
+	</div>
+{:else if data.isEmptyData || data.isEmptySearchParams}
+	<Empty
+		message="Bengkel"
+		isEmptyData={data.isEmptyData}
+		isEmptySearchParams={data.isEmptySearchParams}
+	/>
+{:else if data.bengkel.data}
+	<Bengkels bengkel={data.bengkel} />
 {/if}

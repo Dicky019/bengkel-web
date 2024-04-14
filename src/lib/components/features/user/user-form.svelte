@@ -1,17 +1,20 @@
 <script lang="ts">
-	import * as Form from '$lib/components/ui/form';
-	import { Input } from '$lib/components/ui/input';
+	import * as Form from '$components/ui/form';
+	import { Input } from '$components/ui/input';
 	import { type SuperValidated, superForm, fileProxy } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { userSchema } from '$lib/api/features/users/users.schema';
-	import * as Select from '../ui/select';
-	import Icons from '../icons';
+	import { userSchema } from '$api/features/users/users.schema';
+	import * as Select from '../../ui/select';
+	import Icons from '../../icons';
 	import type { z } from 'zod';
 
-	const { formUser, data } = $props<{
+	const {
+		formUser,
+		data
+	}: {
 		formUser: SuperValidated<z.infer<typeof userSchema>>;
 		data?: z.infer<typeof userSchema>;
-	}>();
+	} = $props();
 
 	const form = superForm(formUser, {
 		validators: zodClient(userSchema)

@@ -4,8 +4,8 @@ import { arrayContained, asc, eq, inArray, like } from 'drizzle-orm';
 import { withPagination } from '../../helpers';
 import type { NewUserSchema, UpdateUserSchema, UserId, UserIds, UsersQuery } from './users.type';
 import { isUploadFile, uploadImage } from '$lib/images/cloudinary';
-import { throwErrorResponse } from '$lib/api/helpers/response';
-import { HttpStatusError } from '$lib/api/helpers/enum';
+import { throwErrorResponse } from '$api/helpers/response';
+import { HttpStatusError } from '$api/helpers/enum';
 import { pengendaraTable } from '$lib/db/schemas/pengendara';
 
 export async function getUsers({ page, pageSize, email }: UsersQuery) {

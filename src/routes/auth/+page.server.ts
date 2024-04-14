@@ -1,4 +1,4 @@
-import { authGoogleAdminSchema } from '$lib/api/features/auth/auth.schema.js';
+import { authGoogleAdminSchema } from '$api/features/auth/auth.schema.js';
 import { parseApiResponse } from '$lib/utils/index.js';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';

@@ -5,12 +5,13 @@
 	import { createRender, createTable } from 'svelte-headless-table';
 	import { readable } from 'svelte/store';
 	import { plugin } from '$lib/components/table/utils';
-	import type { CompleteUsers } from '$lib/api/users/users.type';
+	import type { CompleteUsers } from '$api/features/users/users.type';
 
-	const { users, title } = $props<{
+	const {
+		users
+	}: {
 		users: CompleteUsers;
-		title: string;
-	}>();
+	} = $props();
 
 	const tableDerived = $derived(createTable(readable(users.data), plugin));
 	const table = createTable(readable(users.data), plugin);
@@ -80,12 +81,5 @@
 </script>
 
 {#key users}
-	<DataTable
-		{title}
-		data={users.data}
-		meta={users.meta}
-		table={tableDerived}
-		{columns}
-		{hideableCols}
-	/>
+	<DataTable data={users.data} meta={users.meta} table={tableDerived} {columns} {hideableCols} />
 {/key}

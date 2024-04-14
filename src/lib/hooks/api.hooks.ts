@@ -1,4 +1,4 @@
-import type { AppType } from '$lib/api';
+import type { AppType } from '$api';
 import type { Handle } from '@sveltejs/kit';
 import { hc } from 'hono/client';
 
