@@ -5,14 +5,13 @@
 	import { cubicInOut } from 'svelte/easing';
 	import { crossfade } from 'svelte/transition';
 
-	// let className: string | undefined | null = undefined;
-	// export let items: { href: string; title: string }[];
-	// export {  };
-
-	const { items, class: className } = $props<{
+	const {
+		items,
+		class: className
+	}: {
 		items: { href: string; title: string }[];
 		class: string | undefined | null;
-	}>();
+	} = $props();
 
 	const [send, receive] = crossfade({
 		duration: 250,

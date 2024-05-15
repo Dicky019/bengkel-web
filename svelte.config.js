@@ -1,7 +1,6 @@
 import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
-
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
@@ -20,8 +19,8 @@ const config = {
 		alias: {
 			$lib: 'src/lib',
 			$api: 'src/lib/api',
-			$components: "src/lib/components",
-			$utils: "src/lib/utils",
+			$components: 'src/lib/components',
+			$utils: 'src/lib/utils'
 		}
 	}
 };

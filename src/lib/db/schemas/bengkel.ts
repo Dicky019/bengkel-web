@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, varchar, timestamp, text, index, integer } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, timestamp, text, index } from 'drizzle-orm/pg-core';
 import { userTable } from './auth';
 import { generateId } from 'lucia';
 

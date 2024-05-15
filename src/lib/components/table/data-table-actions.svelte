@@ -4,9 +4,11 @@
 	import { MoreHorizontal } from 'lucide-svelte';
 	import { page } from '$app/stores';
 
-	const { id } = $props<{
+	const {
+		id
+	}: {
 		id: string;
-	}>();
+	} = $props();
 	const title = $page.data.adminData.title.toLowerCase();
 </script>
 

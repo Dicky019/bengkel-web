@@ -8,11 +8,15 @@
 	import type { z } from 'zod';
 	import { goto } from '$app/navigation';
 
-	let { form, className, accessToken } = $props<{
+	let {
+		form,
+		className,
+		accessToken
+	}: {
 		form: SuperValidated<z.infer<typeof authGoogleAdminSchema>>;
 		className?: string;
 		accessToken?: string;
-	}>();
+	} = $props();
 
 	const authGoogleAdminForm = superForm(form, {
 		validators: zodClient(authGoogleAdminSchema)
