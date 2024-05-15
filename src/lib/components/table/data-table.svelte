@@ -40,13 +40,19 @@
 		hide: TablePlugin<any, HiddenColumnsState, Record<string, never>, NewTablePropSet<never>>;
 	};
 
-	const { data, table, columns, hideableCols, meta } = $props<{
+	const {
+		data,
+		table,
+		columns,
+		hideableCols,
+		meta
+	}: {
 		data: T[];
 		table: Table<T, Plugin>;
 		columns: Column<T, Plugin>[];
 		hideableCols: string[];
 		meta: Meta;
-	}>();
+	} = $props();
 
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs, flatColumns, pluginStates, rows } =
 		table.createViewModel(columns);

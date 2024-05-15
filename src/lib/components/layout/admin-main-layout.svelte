@@ -13,22 +13,25 @@
 	import type { User } from 'lucia';
 	import { page } from '$app/stores';
 
-	const { layout, onLayoutChange, onCollapse, onExpand, navCollapsedSize, isCollapsed, user } =
-		$props<{
-			layout: number[];
-			onLayoutChange: (sizes: number[]) => void;
-			onCollapse: () => void;
-			onExpand: () => void;
-			navCollapsedSize: number;
-			isCollapsed: boolean;
-			user: User;
-		}>();
+	const {
+		layout,
+		onLayoutChange,
+		onCollapse,
+		onExpand,
+		navCollapsedSize,
+		isCollapsed,
+		user
+	}: {
+		layout: number[];
+		onLayoutChange: (sizes: number[]) => void;
+		onCollapse: () => void;
+		onExpand: () => void;
+		navCollapsedSize: number;
+		isCollapsed: boolean;
+		user: User;
+	} = $props();
 
 	const { title, isSearch } = $derived($page.data.adminData);
-
-	// layoutStore.subscribe((v) => {
-	// 	console.log(v);
-	// });
 </script>
 
 <Resizable.PaneGroup

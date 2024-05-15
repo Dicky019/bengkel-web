@@ -23,7 +23,7 @@ export const load = async ({ url, locals }) => {
 
 	// You need to use the SvelteKit fetch function here
 	const isEmptySearchParams = pageString === null && perPageString === null && search === null;
-	const isEmptyData = !users.error && users.data.length === 0 && isEmptySearchParams;
+	const isEmptyData = !users.error && users.data.length === 0;
 
 	return {
 		isEmptyData,

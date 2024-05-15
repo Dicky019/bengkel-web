@@ -2,6 +2,7 @@ import { relations } from 'drizzle-orm/relations';
 import { pgEnum, pgTable, varchar, timestamp, index, text } from 'drizzle-orm/pg-core';
 import { generateId } from 'lucia';
 import { pengendaraTable } from './pengendara';
+import { bengkelTable } from './bengkel';
 
 export const providerEnum = pgEnum('provider', ['google', 'github']);
 export const roleEnum = pgEnum('role', ['admin', 'motir', 'pengendara']);
@@ -13,7 +14,7 @@ export const userTable = pgTable(
 			.primaryKey()
 			.$default(() => generateId(40)),
 		provider: providerEnum('provider'),
-		providerId: varchar('provider_id', { length: 255 }),
+		providerId: varchar('provider_id', { length: 255 }).$default(() => generateId(40)),
 		firstName: varchar('first_name', { length: 100 }).notNull(),
 		lastName: varchar('last_name', { length: 100 }).notNull(),
 		imageUrl: varchar('image_url', { length: 255 }),
@@ -55,5 +56,9 @@ export const userRelations = relations(userTable, ({ many, one }) => ({
 	pengendara: one(pengendaraTable, {
 		fields: [userTable.id],
 		references: [pengendaraTable.userId]
+	}),
+	bengkel: one(bengkelTable, {
+		fields: [userTable.id],
+		references: [bengkelTable.userId]
 	})
 }));

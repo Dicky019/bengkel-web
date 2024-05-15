@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$components/ui/button';
 	import Separator from '$components/ui/separator/separator.svelte';
-	// import * as Avatar from '$lib/components/ui/avatar';
+	import * as Avatar from '$lib/components/ui/avatar';
 
 	const { data } = $props();
 
@@ -11,10 +11,12 @@
 
 <div class="flex flex-col gap-2">
 	<div class="mb-2 flex justify-between">
-		<!-- <Avatar.Root class="size-24">
-			<Avatar.Image src={user.imageUrl} alt={'Profile Image'} />
-			<Avatar.Fallback>{(user.firstName[0] + user.lastName[0]).toUpperCase()}</Avatar.Fallback>
-		</Avatar.Root> -->
+		<Avatar.Root class="size-24">
+			<Avatar.Image src={bengkel.user.imageUrl} alt={'Profile Image'} />
+			<Avatar.Fallback
+				>{(bengkel.user.firstName[0] + bengkel.user.lastName[0]).toUpperCase()}</Avatar.Fallback
+			>
+		</Avatar.Root>
 
 		<Button href={editHref}>Edit</Button>
 	</div>

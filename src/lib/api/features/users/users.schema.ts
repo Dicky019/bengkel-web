@@ -36,5 +36,6 @@ export const userIdsSchema = z.object({
 export const usersQuerySchema = z.object({
 	page: z.coerce.number().default(1),
 	pageSize: z.coerce.number().default(10),
-	email: z.string().optional()
+	email: z.string().optional(),
+	role: z.enum(['admin', 'motir', 'pengendara']).optional()
 });

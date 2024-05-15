@@ -7,6 +7,7 @@ import type {
 import * as bengkelRepo from './bengkels.repository';
 import { throwErrorResponse } from '../../helpers/response';
 import { HttpStatusError } from '../../helpers/enum';
+import type { UserIds } from '../users/users.type';
 
 export function getBengkels(usersQuery: BengkelsQuery) {
 	return bengkelRepo.getBengkels(usersQuery);
@@ -44,6 +45,16 @@ export async function getBengkel(id: BengkelId) {
 
 export async function deleteBengkel(id: BengkelId) {
 	const bengkel = await bengkelRepo.getBengkel({ id });
+
+	if (!bengkel) {
+		throw throwErrorResponse(HttpStatusError.NOT_FOUND, 'Bengkel Tidak Ada');
+	}
+
+	return bengkel;
+}
+
+export async function deleteBengkelMany(props: UserIds) {
+	const bengkel = await bengkelRepo.deleteBengkelMany(props);
 
 	if (!bengkel) {
 		throw throwErrorResponse(HttpStatusError.NOT_FOUND, 'Bengkel Tidak Ada');

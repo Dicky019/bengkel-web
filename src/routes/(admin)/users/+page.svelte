@@ -5,8 +5,12 @@
 	const { data } = $props();
 </script>
 
-{#if data.users.error || data.users.data.length === 0}
-	<Empty message={'User'} {...data} />
+{#if data.users.error}
+	<div>
+		Error {data.users.message}
+	</div>
+{:else if data.isEmptyData}
+	<Empty message="Users" isEmptySearchParams={data.isEmptySearchParams} />
 {:else if data.users.data}
 	<Users users={data.users} />
 {/if}

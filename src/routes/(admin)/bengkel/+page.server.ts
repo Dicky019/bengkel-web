@@ -23,7 +23,8 @@ export const load = async ({ url, locals }) => {
 
 	// You need to use the SvelteKit fetch function here
 	const isEmptySearchParams = pageString === null && perPageString === null && search === null;
-	const isEmptyData = !bengkel.error && bengkel.data.length === 0 && isEmptySearchParams;
+	const isEmptyData = !bengkel.error && bengkel.data.length === 0;
+	console.log({ isEmptyData, isEmptySearchParams });
 
 	return {
 		search,
@@ -47,7 +48,7 @@ export const actions = {
 		}
 
 		const deleteUser = await parseApiResponse(
-			event.locals.api.users[':id'].$delete({
+			event.locals.api.bengkels[':id'].$delete({
 				param: {
 					id: userId.toString()
 				}
@@ -60,7 +61,7 @@ export const actions = {
 			return { success: false };
 		}
 
-		setFlash({ type: 'success', message: deleteUser.data.email }, event.cookies);
+		setFlash({ type: 'success', message: deleteUser.data.name }, event.cookies);
 		return { success: true };
 	},
 	deleteAll: async (event) => {
@@ -75,7 +76,7 @@ export const actions = {
 		const users = JSON.parse(usersJson.toString()) as User[];
 
 		const deleteManyUser = await parseApiResponse(
-			event.locals.api.users.$delete({
+			event.locals.api.bengkels.$delete({
 				json: {
 					usersIds: users.map((v) => ({ id: v.id }))
 				}

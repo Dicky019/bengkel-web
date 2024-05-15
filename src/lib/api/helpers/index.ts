@@ -1,9 +1,15 @@
 import type { Cookie } from 'lucia';
 import { HttpStatus, HttpStatusError, HttpStatusSuccess } from './enum';
-import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
+import type {
+	PgColumn,
+	PgSelect,
+	PgSelectConfig,
+	PgTable,
+	SelectedFields
+} from 'drizzle-orm/pg-core';
 import { count, type SQL } from 'drizzle-orm';
 import { db } from '$lib/db';
-import { z } from 'zod';
+import { number, z } from 'zod';
 import { MAX_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from '$lib/utils/index';
 
 type THttpStatusErrorKeys = keyof typeof HttpStatusError;
@@ -42,33 +48,38 @@ export function convertCookie(cookie: Cookie) {
 	} as const;
 }
 
-export async function withPagination<T extends PgTable>({
-	table,
-	orderByColumn,
-	whereColumn,
+export async function withPagination<T>({
+	// table,
+	// orderByColumn,
+	// whereColumn,
+	dataFn,
+	totalFn,
 	page = 1,
 	pageSize = 10
+	// newSelect
 }: {
-	table: T;
-	orderByColumn: (table: T) => PgColumn | SQL | SQL.Aliased;
-	whereColumn?: (table: T) => SQL;
+	// table: T;
+	// newSelect?: (table: T) => SelectedFields;
+	// orderByColumn: (table: T) => PgColumn | SQL | SQL.Aliased;
+	// whereColumn?: (table: T) => SQL;
+	dataFn: (offset: number, limir: number) => Promise<T[]>;
+	totalFn: () => Promise<number>;
 	page?: number;
 	pageSize?: number;
 }) {
-	const queryTotal = db.select({ count: count() }).from(table);
-	const totalQuery = whereColumn ? await queryTotal.where(whereColumn(table)) : await queryTotal;
+	// const queryTotal = db.select({ count: count() }).from(table);
+	// const totalQuery = whereColumn ? await queryTotal.where(whereColumn(table)) : await queryTotal;
 
-	const total = totalQuery[0]?.count ?? 0;
+	// const total = totalQuery[0]?.count ?? 0;
 	const offset = page > 0 ? pageSize * (page - 1) : 0;
 
-	const queryDb = db
-		.select()
-		.from(table)
-		.orderBy(orderByColumn(table))
-		.limit(pageSize)
-		.offset(offset);
+	const [data, total] = await Promise.all([dataFn(offset, pageSize), totalFn()]);
 
-	const data = whereColumn ? await queryDb.where(whereColumn(table)) : await queryDb;
+	// const query = newSelect ? db.select(newSelect(table)).from(table) : db.select().from(table);
+
+	// const queryDb = query.orderBy(orderByColumn(table)).limit(pageSize).offset(offset);
+
+	// const data = whereColumn ? await queryDb.where(whereColumn(table)) : await queryDb;
 
 	const lastPage = Math.ceil(total / pageSize);
 	const prev = page > 1 ? page - 1 : null;

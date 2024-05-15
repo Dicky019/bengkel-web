@@ -10,7 +10,7 @@ export const pengendaraTable = pgTable('pengendara', {
 	noTelephone: varchar('no_telephone').notNull(),
 	userId: text('user_id')
 		.notNull()
-		.references(() => userTable.id)
+		.references(() => userTable.id, { onDelete: 'cascade' })
 		.unique(),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow()

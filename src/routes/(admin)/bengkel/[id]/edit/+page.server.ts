@@ -4,12 +4,35 @@ import { superValidate, withFiles } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { parseApiResponse } from '$lib/utils/index';
 import { VITE_VERCEL_URL } from '$env/static/private';
-import { insertBengkelSchema } from '$api/features/bengkels/bengkel.schema';
+import { insertBengkelSchema } from '$api/features/bengkels/bengkels.schema';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ url, locals, cookies }) => {
+	const pageString = url.searchParams.get('page');
+	const perPageString = url.searchParams.get('per-page');
+	const search = url.searchParams.get('search');
+
+	const users = await parseApiResponse(
+		locals.api.users.$get({
+			query: {
+				role: 'motir',
+				email: search ?? undefined,
+				page: pageString ?? undefined,
+				pageSize: perPageString ?? undefined
+			}
+		})
+	);
+
+	if (users.error) {
+		setFlash({ type: 'error', message: users.message }, cookies);
+		return {
+			form: await superValidate(zod(insertBengkelSchema)),
+			users: undefined
+		};
+	}
+
 	return {
-		form: await superValidate(zod(insertBengkelSchema))
-		// user: data
+		form: await superValidate(zod(insertBengkelSchema)),
+		users: users
 	};
 };
 
@@ -22,8 +45,8 @@ export const actions = {
 		// console.log({ ...form.data, id: event.params.id });
 
 		const updateUser = await parseApiResponse(
-			locals.api.bengkel.$put({
-				json: { ...form.data, id: event.params.id, geoId: form.data.geoId ?? null }
+			locals.api.bengkels.$put({
+				json: { ...form.data, id: event.params.id }
 			})
 		);
 

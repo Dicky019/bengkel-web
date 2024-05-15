@@ -9,12 +9,8 @@
 	<div>
 		Error {data.bengkel.message}
 	</div>
-{:else if data.isEmptyData || data.isEmptySearchParams}
-	<Empty
-		message="Bengkel"
-		isEmptyData={data.isEmptyData}
-		isEmptySearchParams={data.isEmptySearchParams}
-	/>
+{:else if data.isEmptyData}
+	<Empty message="Bengkel" isEmptySearchParams={data.isEmptySearchParams} />
 {:else if data.bengkel.data}
 	<Bengkels bengkel={data.bengkel} />
 {/if}

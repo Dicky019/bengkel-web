@@ -1,9 +1,19 @@
 <script lang="ts">
-	import UsersForm from '$lib/components/features/user/user-form.svelte';
+	import BengkelForm from '$components/features/bengkel/bengkel-form.svelte';
 
 	const { data } = $props();
 </script>
 
-<!-- <AdminMainLayout layout={data.layout} title="New Users"> -->
-<!-- <UsersForm formUser={data.form} data={data.user} /> -->
-<!-- </AdminMainLayout> -->
+<BengkelForm
+	users={data.users}
+	form={data.form}
+	data={{
+		name: data.bengkel.name,
+		userId: data.bengkel.userId,
+		noTelephone: data.bengkel.noTelephone,
+		alamat: data.bengkel.alamat,
+		lat: data.bengkel.geo?.lat ?? '',
+		long: data.bengkel.geo?.long ?? ''
+	}}
+	user={data.bengkel.user}
+/>

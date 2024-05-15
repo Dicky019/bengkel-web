@@ -5,16 +5,25 @@ import type {
 	UpdateBengkelSchema,
 	BengkelId
 } from './bengkels.type';
-import { bengkelTable } from '$lib/db/schemas/bengkel';
-import { asc, eq, like } from 'drizzle-orm';
+import { bengkelTable, geoTable } from '$lib/db/schemas/bengkel';
+import { asc, count, eq, like } from 'drizzle-orm';
 import { withPagination } from '../../helpers';
+import type { UserIds } from '../users/users.type';
 
 export async function getBengkels({ name, page, pageSize }: BengkelsQuery) {
 	const searchName = '%' + name + '%';
 	const bengkelsPagination = await withPagination({
-		table: bengkelTable,
-		orderByColumn: (table) => asc(table.name),
-		whereColumn: name ? (table) => like(table.name, searchName) : undefined,
+		dataFn: async (offset) =>
+			await db.query.bengkelTable.findMany({
+				where: name ? (table) => like(table.name, searchName) : undefined,
+				orderBy: (table) => asc(table.name),
+				offset: offset,
+				with: {
+					geo: true,
+					user: true
+				}
+			}),
+		totalFn: async () => (await db.select({ count: count() }).from(bengkelTable))[0].count,
 		page,
 		pageSize
 	});
@@ -40,19 +49,34 @@ export async function getBengkel({ name, id }: { name?: string; id?: string }) {
 	return bengkelQuery;
 }
 
-export async function createBengkel(props: NewBengkelSchema) {
-	const [bengkel] = await db.insert(bengkelTable).values(props).returning();
-	return bengkel;
+export async function createBengkel({ lat, long, ...props }: NewBengkelSchema) {
+	return await db.transaction(async (tx) => {
+		const [geo] = await tx.insert(geoTable).values({ lat, long }).returning();
+		const [bengkel] = await tx
+			.insert(bengkelTable)
+			.values({
+				alamat: props.alamat,
+				geoId: geo.id,
+				name: props.name,
+				noTelephone: props.noTelephone,
+				userId: props.userId
+			})
+			.returning();
+
+		return { ...bengkel, geo };
+	});
 }
 
 export async function updateBengkel(props: UpdateBengkelSchema) {
+	const [geo] = await db.update(geoTable).set(props).where(eq(geoTable.id, props.id)).returning();
+
 	const [bengkel] = await db
 		.update(bengkelTable)
 		.set(props)
 		.where(eq(bengkelTable.id, props.id))
 		.returning();
 
-	return bengkel;
+	return { ...bengkel, geo };
 }
 
 export async function deleteBengkel(props: BengkelId) {
@@ -61,8 +85,12 @@ export async function deleteBengkel(props: BengkelId) {
 	return bengkel;
 }
 
-// export async function deleteManyBengkel(props: BengkelId[]) {
-// 	const [bengkel] = await db.delete(bengkelTable).where(eq(bengkelTable.id, props.id)).returning();
-
-// 	return bengkel;
-// }
+export async function deleteBengkelMany(props: UserIds) {
+	return await db.transaction(async (tx) => {
+		return (
+			await Promise.all(
+				props.map((user) => tx.delete(bengkelTable).where(eq(bengkelTable.id, user.id)).returning())
+			)
+		)[0];
+	});
+}

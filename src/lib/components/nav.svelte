@@ -7,10 +7,13 @@
 
 	// export let isCollapsed: boolean;
 	// export let routes: Route[];
-	const { isCollapsed, routes } = $props<{
+	const {
+		isCollapsed,
+		routes
+	}: {
 		isCollapsed: boolean;
 		routes: Route[];
-	}>();
+	} = $props();
 	const { title } = $derived($page.data.adminData);
 
 	const isActive = (path: string) => {

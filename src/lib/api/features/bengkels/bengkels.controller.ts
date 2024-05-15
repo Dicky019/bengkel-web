@@ -7,12 +7,8 @@ import validatorSchemaMiddleware from '../../middlewares/validator';
 import { authMiddleware } from '../../middlewares/auth';
 
 import * as bengkelService from './bengkels.service';
-import {
-	bengkelsQuerySchema,
-	insertBengkelSchema,
-	setBengkelSchema,
-	updateBengkelSchema
-} from './bengkels.schema';
+import { bengkelsQuerySchema, insertBengkelSchema, updateBengkelSchema } from './bengkels.schema';
+import { userIdsSchema } from '../users/users.schema';
 
 const bengkel = new Hono<{
 	Variables: MiddlewareVariables;
@@ -43,17 +39,17 @@ const bengkel = new Hono<{
 		const bengkelId = c.req.param('id');
 		const bengkel = await bengkelService.deleteBengkel(bengkelId);
 		return successResponse(c, { data: bengkel });
-	});
-// .delete(
-// 	'/',
-// 	authMiddleware(['admin']),
-// 	validatorSchemaMiddleware('json', userIdsSchema),
-// 	async (c) => {
-// 		const userIdsJson = c.req.valid('json');
-// 		const user = await bengkelService.de(userIdsJson.usersIds);
-// 		return successResponse(c, { data: user });
-// 	}
-// );
+	})
+	.delete(
+		'/',
+		authMiddleware(['admin']),
+		validatorSchemaMiddleware('json', userIdsSchema),
+		async (c) => {
+			const userIdsJson = c.req.valid('json');
+			const user = await bengkelService.deleteBengkelMany(userIdsJson.usersIds);
+			return successResponse(c, { data: user });
+		}
+	);
 
 export default bengkel;
 export type UsersType = typeof bengkel;

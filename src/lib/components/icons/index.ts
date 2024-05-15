@@ -24,7 +24,7 @@ import Google from './google.svelte';
 import Github from './github.svelte';
 import Logo from './logo.svelte';
 import Hamburger from './hamburger.svelte';
-import { ClipboardPen, Users, Warehouse } from 'lucide-svelte';
+import { ChevronDown, ClipboardPen, Users, Warehouse } from 'lucide-svelte';
 
 const Icons = {
 	logo: Logo,
@@ -34,6 +34,7 @@ const Icons = {
 	workshop: Warehouse,
 	chevronLeft: ChevronLeft,
 	chevronRight: ChevronRight,
+	chevronDown: ChevronDown,
 	trash: Trash,
 	post: FileText,
 	page: File,

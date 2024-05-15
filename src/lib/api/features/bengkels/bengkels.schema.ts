@@ -3,14 +3,22 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
 // Schema for Bengkels - used to validate API requests
-const defaultOmit = { id: true, createdAt: true, updatedAt: true } as const;
+const defaultOmit = { createdAt: true, updatedAt: true, geoId: true } as const;
 const baseSchema = createSelectSchema(bengkelTable);
 
-export const insertBengkelSchema = createInsertSchema(bengkelTable).omit({ ...defaultOmit });
+export const insertBengkelSchema = createInsertSchema(bengkelTable)
+	.omit({
+		...defaultOmit,
+		id: true
+	})
+	.extend({
+		lat: z.string(),
+		long: z.string()
+	});
 
-export const updateBengkelSchema = baseSchema.extend({}).omit({
-	createdAt: true,
-	updatedAt: true
+export const updateBengkelSchema = baseSchema.extend({}).omit(defaultOmit).extend({
+	lat: z.string(),
+	long: z.string()
 });
 
 export const setBengkelSchema = baseSchema.omit({

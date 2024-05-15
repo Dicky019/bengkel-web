@@ -45,11 +45,18 @@
 		}),
 		table.column({
 			accessor: 'alamat',
-			header: 'Email'
+			header: 'Alamat'
 		}),
 		table.column({
 			accessor: 'noTelephone',
 			header: 'Nomor Telephone'
+		}),
+		table.column({
+			accessor: 'geo',
+			header: 'geo',
+			cell: (item) => {
+				return `${item.value?.lat ?? '---'} ${item.value?.long ?? '---'}`;
+			}
 		}),
 
 		table.column({
