@@ -19,8 +19,8 @@ export const bengkelTable = pgTable(
 		geoId: text('geo_id')
 			.references(() => geoTable.id, { onDelete: 'set null' })
 			.unique(),
-		createdAt: timestamp('created_at').defaultNow(),
-		updatedAt: timestamp('updated_at').defaultNow()
+		createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow(),
+		updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow()
 	},
 	(t) => ({
 		indexEmail: index().on(t.name)

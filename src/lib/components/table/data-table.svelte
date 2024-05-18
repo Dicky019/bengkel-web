@@ -126,7 +126,7 @@
 		<!-- <SearchForm /> -->
 		<a href={`/${title.toLocaleLowerCase()}/new`} class={buttonVariants()}>New {title}</a>
 		{#if selectedData.length !== 0}
-			<div out:fade={{ duration: 100 }} in:fade={{ duration: 300, delay: 100 }}>
+			<div in:fade={{ duration: 300 }}>
 				<form method="post" action={`/${title.toLocaleLowerCase()}?/deleteAll`}>
 					<input hidden bind:value={users} name="users" />
 					<Button type="submit" variant="destructive">Delete {selectedData.length}</Button>

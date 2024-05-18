@@ -58,6 +58,6 @@ export const actions = {
 
 		const { data } = updateUser;
 
-		return redirect(VITE_VERCEL_URL + 'users', { type: 'success', message: data.name }, cookies);
+		return redirect(VITE_VERCEL_URL + 'bengkel', { type: 'success', message: data.name }, cookies);
 	}
 };

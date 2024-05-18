@@ -12,8 +12,8 @@ export const pengendaraTable = pgTable('pengendara', {
 		.notNull()
 		.references(() => userTable.id, { onDelete: 'cascade' })
 		.unique(),
-	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('updated_at').defaultNow()
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow(),
+	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow()
 });
 
 export const pengendaraRelations = relations(pengendaraTable, ({ one }) => ({
