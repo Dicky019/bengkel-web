@@ -1,6 +1,6 @@
 import { db } from '$lib/db';
 import { userTable } from '$lib/db/schemas/auth';
-import { SQL, and, count, eq, inArray, like, sql } from 'drizzle-orm';
+import { SQL, and, count, eq, inArray, sql } from 'drizzle-orm';
 import { withPagination } from '../../helpers';
 import type { NewUserSchema, UpdateUserSchema, UserId, UserIds, UsersQuery } from './users.type';
 import { isUploadFile, uploadImage } from '$lib/images/cloudinary';

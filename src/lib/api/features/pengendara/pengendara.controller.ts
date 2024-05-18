@@ -7,7 +7,7 @@ import validatorSchemaMiddleware from '../../middlewares/validator';
 import { authMiddleware } from '../../middlewares/auth';
 
 import * as pengendaraService from './pengendara.service';
-import { setPengendaraSchema, updatePengendaraSchema } from './pengendara.schema';
+import { setPengendaraSchema } from './pengendara.schema';
 
 const pengendara = new Hono<{
 	Variables: MiddlewareVariables;
