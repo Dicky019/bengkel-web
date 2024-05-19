@@ -24,14 +24,14 @@ const bengkel = new Hono<{
 		return successResponse(c, { data: user });
 	})
 	.post('/', validatorSchemaMiddleware('json', insertBengkelSchema), async (c) => {
-		const updatePengendara = c.req.valid('json');
-		const bengkel = await bengkelService.createBengkel(updatePengendara);
+		const insertBengkel = c.req.valid('json');
+		const bengkel = await bengkelService.createBengkel(insertBengkel);
 
 		return successResponse(c, { data: bengkel });
 	})
 	.put('/', validatorSchemaMiddleware('json', updateBengkelSchema), async (c) => {
-		const updatePengendara = c.req.valid('json');
-		const bengkel = await bengkelService.updateBengkel(updatePengendara);
+		const updateBengkel = c.req.valid('json');
+		const bengkel = await bengkelService.updateBengkel(updateBengkel);
 
 		return successResponse(c, { data: bengkel });
 	})
