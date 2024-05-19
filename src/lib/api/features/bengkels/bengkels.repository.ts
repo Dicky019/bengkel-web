@@ -67,16 +67,29 @@ export async function createBengkel({ lat, long, ...props }: NewBengkelSchema) {
 	});
 }
 
-export async function updateBengkel(props: UpdateBengkelSchema) {
-	const [geo] = await db.update(geoTable).set(props).where(eq(geoTable.id, props.id)).returning();
+export async function updateBengkel({ lat, long, ...props }: UpdateBengkelSchema) {
+	return await db.transaction(async (tx) => {
+		const [bengkel] = await tx
+			.insert(bengkelTable)
+			.values({
+				alamat: props.alamat,
+				name: props.name,
+				noTelephone: props.noTelephone,
+				userId: props.userId
+			})
+			.returning();
+		if (!bengkel.geoId) {
+			return { ...bengkel, geo: null };
+		}
 
-	const [bengkel] = await db
-		.update(bengkelTable)
-		.set(props)
-		.where(eq(bengkelTable.id, props.id))
-		.returning();
+		const [geo] = await tx
+			.update(geoTable)
+			.set({ lat, long })
+			.where(eq(geoTable.id, bengkel.geoId))
+			.returning();
 
-	return { ...bengkel, geo };
+		return { ...bengkel, geo };
+	});
 }
 
 export async function deleteBengkel(props: BengkelId) {
