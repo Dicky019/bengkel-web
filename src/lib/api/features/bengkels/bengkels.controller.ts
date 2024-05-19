@@ -13,7 +13,7 @@ import { userIdsSchema } from '../users/users.schema';
 const bengkel = new Hono<{
 	Variables: MiddlewareVariables;
 }>()
-	.use(authMiddleware(['motir', 'admin']))
+	.use(authMiddleware())
 	.get('/', validatorSchemaMiddleware('query', bengkelsQuerySchema), async (c) => {
 		const bengkelsQuery = c.req.valid('query');
 		const bengkels = await bengkelService.getBengkels(bengkelsQuery);
