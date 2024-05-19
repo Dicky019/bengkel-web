@@ -67,16 +67,17 @@ export async function createBengkel({ lat, long, ...props }: NewBengkelSchema) {
 	});
 }
 
-export async function updateBengkel({ lat, long, ...props }: UpdateBengkelSchema) {
+export async function updateBengkel({ lat, long, id, ...props }: UpdateBengkelSchema) {
 	return await db.transaction(async (tx) => {
 		const [bengkel] = await tx
-			.insert(bengkelTable)
-			.values({
+			.update(bengkelTable)
+			.set({
 				alamat: props.alamat,
 				name: props.name,
 				noTelephone: props.noTelephone,
 				userId: props.userId
 			})
+			.where(eq(bengkelTable.id, id))
 			.returning();
 		if (!bengkel.geoId) {
 			return { ...bengkel, geo: null };
