@@ -8,18 +8,16 @@ export const pemesananTable = pgTable('pemesanan', {
 	id: text('id')
 		.primaryKey()
 		.$default(() => generateId(40)),
-	messagesId: varchar('messages_id').notNull(),
+	messagesId: varchar('messages_id').unique().notNull(),
 	merek_motor: varchar('merek_motor').notNull(),
 	image_motor: varchar('image_motor').notNull(),
 	description: varchar('description').notNull(),
 	pengendaraId: text('pengendara_id')
 		.notNull()
-		.references(() => pengendaraTable.id, { onDelete: 'cascade', onUpdate: 'cascade' })
-		.unique(),
+		.references(() => pengendaraTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
 	bengkelId: text('bengkel_id')
 		.notNull()
-		.references(() => bengkelTable.id, { onDelete: 'cascade', onUpdate: 'cascade' })
-		.unique(),
+		.references(() => bengkelTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow(),
 	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow()
 });
