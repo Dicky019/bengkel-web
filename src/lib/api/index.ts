@@ -4,6 +4,7 @@ import { hc } from 'hono/client';
 import { authMiddlewareLucia } from './middlewares/auth';
 
 import users from './features/users/users.controller';
+import pemesanan from './features/pemesanan/pemesanan.controller';
 import pengendara from './features/pengendara/pengendara.controller';
 import authRouter from './features/auth/auth.controller';
 import type { MiddlewareVariables } from './helpers/types';
@@ -27,6 +28,7 @@ const routes = app
 	.route('/pengendara', pengendara)
 	.route('/bengkels', bengkels)
 	.route('/auth', authRouter)
+	.route('/pemesanan', pemesanan)
 	.get('/', (c) => c.json({ message: 'server is healthy' }));
 
 /* -------------------------------------------------------------------------- */

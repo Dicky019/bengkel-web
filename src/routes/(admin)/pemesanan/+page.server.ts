@@ -9,8 +9,8 @@ export const load = async ({ url, locals }) => {
 	const perPageString = url.searchParams.get('per-page');
 	const search = url.searchParams.get('search');
 
-	const bengkel = await parseApiResponse(
-		locals.api.bengkels.$get({
+	const pemesanan = await parseApiResponse(
+		locals.api.pemesanan.$get({
 			query: {
 				name: search ?? undefined,
 				page: pageString ?? undefined,
@@ -19,16 +19,16 @@ export const load = async ({ url, locals }) => {
 		})
 	);
 
-	// console.log(bengkel);
+	// console.log(pemesanan);
 
 	// You need to use the SvelteKit fetch function here
 	const isEmptySearchParams = pageString === null && perPageString === null && search === null;
-	const isEmptyData = !bengkel.error && bengkel.data.length === 0;
+	const isEmptyData = !pemesanan.error && pemesanan.data.length === 0;
 	console.log({ isEmptyData, isEmptySearchParams });
 
 	return {
 		search,
-		bengkel: bengkel,
+		pemesanan,
 		isEmptyData,
 		isEmptySearchParams
 	};
@@ -48,7 +48,7 @@ export const actions = {
 		}
 
 		const deleteUser = await parseApiResponse(
-			event.locals.api.bengkels[':id'].$delete({
+			event.locals.api.pemesanan[':id'].$delete({
 				param: {
 					id: userId.toString()
 				}
@@ -61,7 +61,7 @@ export const actions = {
 			return { success: false };
 		}
 
-		setFlash({ type: 'success', message: deleteUser.data.name }, event.cookies);
+		setFlash({ type: 'success', message: deleteUser.data.merek_motor }, event.cookies);
 		return { success: true };
 	},
 	deleteAll: async (event) => {
@@ -76,7 +76,7 @@ export const actions = {
 		const users = JSON.parse(usersJson.toString()) as User[];
 
 		const deleteManyUser = await parseApiResponse(
-			event.locals.api.bengkels.$delete({
+			event.locals.api.pemesanan.$delete({
 				json: {
 					usersIds: users.map((v) => ({ id: v.id }))
 				}
@@ -90,7 +90,7 @@ export const actions = {
 		}
 
 		setFlash(
-			{ type: 'success', message: `Bengkel yang berhasil di hapus ${users.length}` },
+			{ type: 'success', message: `Pemesanan yang berhasil di hapus ${users.length}` },
 			event.cookies
 		);
 		return { success: true };
