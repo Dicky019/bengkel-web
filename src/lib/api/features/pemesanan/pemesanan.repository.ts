@@ -10,6 +10,20 @@ import { asc, count, eq, like } from 'drizzle-orm';
 import { withPagination } from '../../helpers';
 import type { UserIds } from '../users/users.type';
 
+const withPemesanan = {
+	bengkel: {
+		with: {
+			geo: true,
+			user: true
+		}
+	},
+	pengendara: {
+		with: {
+			user: true
+		}
+	}
+} as const;
+
 export async function getPemesanans({ name, page, pageSize }: PemesanansQuery) {
 	const searchName = '%' + name + '%';
 	const pemesanansPagination = await withPagination({
@@ -18,14 +32,7 @@ export async function getPemesanans({ name, page, pageSize }: PemesanansQuery) {
 				where: name ? (table) => like(table.createdAt, searchName) : undefined,
 				orderBy: (table) => asc(table.createdAt),
 				offset: offset,
-				with: {
-					bengkel: true,
-					pengendara: {
-						with: {
-							user: true
-						}
-					}
-				}
+				with: withPemesanan
 			}),
 		totalFn: async () => (await db.select({ count: count() }).from(pemesananTable))[0].count,
 		page,
@@ -45,14 +52,7 @@ export async function getPemesanan({ merek_motor, id }: { merek_motor?: string; 
 				return operators.eq(fields.merek_motor, merek_motor);
 			}
 		},
-		with: {
-			bengkel: true,
-			pengendara: {
-				with: {
-					user: true
-				}
-			}
-		}
+		with: withPemesanan
 	});
 	return pemesananQuery;
 }
