@@ -6,7 +6,7 @@ import type {
 	PemesananId
 } from './pemesanan.type';
 import { pemesananTable } from '$lib/db/schemas/pemesanan';
-import { asc, count, eq, like } from 'drizzle-orm';
+import { SQL, and, asc, count, eq, sql } from 'drizzle-orm';
 import { withPagination } from '../../helpers';
 import type { UserIds } from '../users/users.type';
 
@@ -24,19 +24,47 @@ const withPemesanan = {
 	}
 } as const;
 
-export async function getPemesanans({ name, page, pageSize }: PemesanansQuery) {
-	const searchName = '%' + name + '%';
+const where = ({ name, role, id }: PemesanansQuery) => {
+	if (!id && !name) {
+		return undefined;
+	}
+
+	let qweryMerekMotor: SQL<unknown> | null = null;
+	if (name) {
+		qweryMerekMotor = sql`lower(${pemesananTable.merek_motor}) like ${name}`;
+	}
+
+	let qweryUserId: SQL<unknown> | null = null;
+	if (id && role) {
+		qweryUserId = eq(
+			role == 'bengkel' ? pemesananTable.bengkelId : pemesananTable.pengendaraId,
+			id
+		);
+	}
+
+	if (qweryUserId && qweryMerekMotor) return and(qweryMerekMotor, qweryUserId);
+
+	if (qweryUserId) {
+		return qweryUserId;
+	}
+
+	if (qweryMerekMotor) {
+		return qweryMerekMotor;
+	}
+};
+
+export async function getPemesanans(props: PemesanansQuery) {
 	const pemesanansPagination = await withPagination({
 		dataFn: async (offset) =>
 			await db.query.pemesananTable.findMany({
-				where: name ? (table) => like(table.createdAt, searchName) : undefined,
+				where: () => where(props),
 				orderBy: (table) => asc(table.createdAt),
 				offset: offset,
 				with: withPemesanan
 			}),
 		totalFn: async () => (await db.select({ count: count() }).from(pemesananTable))[0].count,
-		page,
-		pageSize
+		page: props.page,
+		pageSize: props.pageSize
 	});
 
 	return pemesanansPagination;

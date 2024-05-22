@@ -28,5 +28,7 @@ export const pemesananIdSchema = baseSchema.pick({ id: true });
 export const pemesananQuerySchema = z.object({
 	page: z.coerce.number().default(1),
 	pageSize: z.coerce.number().default(10),
-	name: z.string().optional()
+	name: z.string().optional(),
+	id: z.string().optional(),
+	role: z.enum(['bengkel', 'pengendara']).optional()
 });
